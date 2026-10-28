@@ -47,6 +47,25 @@
 "average_speed": 2.849,
 "elevation_gain": 4.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 131
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 334
+},
+{
+"name": "5K",
+"distance": 5000.0,
+"elapsed_time": 1747
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:24.837166+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -63,6 +82,20 @@
 "average_speed": 2.831,
 "elevation_gain": 8.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 127
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 341
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:24.514974+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -79,6 +112,40 @@
 "average_speed": 3.029,
 "elevation_gain": 51.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 116
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 294
+},
+{
+"name": "5K",
+"distance": 5000.0,
+"elapsed_time": 1519
+},
+{
+"name": "10K",
+"distance": 10000.0,
+"elapsed_time": 3042
+},
+{
+"name": "Half-Marathon",
+"distance": 21097.0,
+"elapsed_time": 6518
+},
+{
+"name": "Marathon",
+"distance": 42195.0,
+"elapsed_time": 13782
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:24.194512+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -96,6 +163,27 @@
 "elevation_gain": 64.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 480.6,
+"start_time": 1047,
+"end_time": 1052
+},
+{
+"duration": 60,
+"watts": 283.43333333333334,
+"start_time": 732,
+"end_time": 792
+},
+{
+"duration": 300,
+"watts": 177.44666666666666,
+"start_time": 678,
+"end_time": 978
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:26.566735+00:00",
 "streak": 1
 },
 {
@@ -113,6 +201,33 @@
 "elevation_gain": 52.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 449.8,
+"start_time": 2892,
+"end_time": 2897
+},
+{
+"duration": 60,
+"watts": 170.15,
+"start_time": 1485,
+"end_time": 1545
+},
+{
+"duration": 300,
+"watts": 142.98,
+"start_time": 1362,
+"end_time": 1662
+},
+{
+"duration": 1200,
+"watts": 124.52083333333333,
+"start_time": 1360,
+"end_time": 2560
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:26.432496+00:00",
 "streak": 1
 },
 {
@@ -130,6 +245,33 @@
 "elevation_gain": 942.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 464.2,
+"start_time": 3570,
+"end_time": 3575
+},
+{
+"duration": 60,
+"watts": 277.56666666666666,
+"start_time": 3367,
+"end_time": 3427
+},
+{
+"duration": 300,
+"watts": 191.33,
+"start_time": 1152,
+"end_time": 1452
+},
+{
+"duration": 1200,
+"watts": 157.06583333333333,
+"start_time": 1982,
+"end_time": 3182
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:26.323199+00:00",
 "streak": 1
 },
 {
@@ -147,6 +289,27 @@
 "elevation_gain": 50.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 591.6,
+"start_time": 5143,
+"end_time": 5148
+},
+{
+"duration": 60,
+"watts": 271.4166666666667,
+"start_time": 1131,
+"end_time": 1191
+},
+{
+"duration": 300,
+"watts": 194.06666666666666,
+"start_time": 4468,
+"end_time": 4768
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:26.126743+00:00",
 "streak": 1
 },
 {
@@ -164,6 +327,27 @@
 "elevation_gain": 36.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 237.6,
+"start_time": 284,
+"end_time": 289
+},
+{
+"duration": 60,
+"watts": 157.15,
+"start_time": 347,
+"end_time": 407
+},
+{
+"duration": 300,
+"watts": 115.90666666666667,
+"start_time": 155,
+"end_time": 455
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:26.015346+00:00",
 "streak": 1
 },
 {
@@ -181,6 +365,27 @@
 "elevation_gain": 19.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 286.8,
+"start_time": 344,
+"end_time": 349
+},
+{
+"duration": 60,
+"watts": 124.43333333333334,
+"start_time": 341,
+"end_time": 401
+},
+{
+"duration": 300,
+"watts": 85.33333333333333,
+"start_time": 344,
+"end_time": 644
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:25.912089+00:00",
 "streak": 1
 },
 {
@@ -198,6 +403,33 @@
 "elevation_gain": 1127.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 480.0,
+"start_time": 5078,
+"end_time": 5083
+},
+{
+"duration": 60,
+"watts": 223.06666666666666,
+"start_time": 4819,
+"end_time": 4879
+},
+{
+"duration": 300,
+"watts": 176.84333333333333,
+"start_time": 286,
+"end_time": 586
+},
+{
+"duration": 1200,
+"watts": 136.31916666666666,
+"start_time": 7689,
+"end_time": 8889
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:25.774438+00:00",
 "streak": 2
 },
 {
@@ -263,6 +495,33 @@
 "elevation_gain": 24.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 435.6,
+"start_time": 3025,
+"end_time": 3030
+},
+{
+"duration": 60,
+"watts": 218.23333333333332,
+"start_time": 66,
+"end_time": 126
+},
+{
+"duration": 300,
+"watts": 175.89,
+"start_time": 2157,
+"end_time": 2457
+},
+{
+"duration": 1200,
+"watts": 147.20833333333334,
+"start_time": 22,
+"end_time": 1222
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:25.542553+00:00",
 "streak": 1
 },
 {
@@ -280,6 +539,27 @@
 "elevation_gain": 62.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 385.8,
+"start_time": 7272,
+"end_time": 7277
+},
+{
+"duration": 60,
+"watts": 203.26666666666668,
+"start_time": 5860,
+"end_time": 5920
+},
+{
+"duration": 300,
+"watts": 149.61333333333334,
+"start_time": 5675,
+"end_time": 5975
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:25.386620+00:00",
 "streak": 1
 },
 {
@@ -296,6 +576,30 @@
 "average_speed": 0.684,
 "elevation_gain": 669.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 152
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 631
+},
+{
+"name": "5K",
+"distance": 5000.0,
+"elapsed_time": 5280
+},
+{
+"name": "10K",
+"distance": 10000.0,
+"elapsed_time": 15172
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:23.738448+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -329,6 +633,27 @@
 "elevation_gain": 94.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 405.6,
+"start_time": 1687,
+"end_time": 1692
+},
+{
+"duration": 60,
+"watts": 217.63333333333333,
+"start_time": 2782,
+"end_time": 2842
+},
+{
+"duration": 300,
+"watts": 151.56666666666666,
+"start_time": 2564,
+"end_time": 2864
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:25.224121+00:00",
 "streak": 1
 },
 {
@@ -346,6 +671,33 @@
 "elevation_gain": 251.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 492.0,
+"start_time": 8558,
+"end_time": 8563
+},
+{
+"duration": 60,
+"watts": 288.95,
+"start_time": 5324,
+"end_time": 5384
+},
+{
+"duration": 300,
+"watts": 151.56666666666666,
+"start_time": 2563,
+"end_time": 2863
+},
+{
+"duration": 1200,
+"watts": 87.3225,
+"start_time": 8912,
+"end_time": 10112
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:25.126992+00:00",
 "streak": 1
 },
 {
@@ -363,6 +715,33 @@
 "elevation_gain": 157.0,
 "source": "strava",
 "device_watts": true,
+"power_efforts": [
+{
+"duration": 5,
+"watts": 492.0,
+"start_time": 4633,
+"end_time": 4638
+},
+{
+"duration": 60,
+"watts": 288.95,
+"start_time": 1399,
+"end_time": 1459
+},
+{
+"duration": 300,
+"watts": 140.65333333333334,
+"start_time": 4991,
+"end_time": 5291
+},
+{
+"duration": 1200,
+"watts": 87.3225,
+"start_time": 4987,
+"end_time": 6187
+}
+],
+"power_efforts_synced_at": "2026-10-28T20:45:24.955849+00:00",
 "streak": 1
 },
 {
@@ -549,6 +928,20 @@
 "average_speed": 0.871,
 "elevation_gain": 8.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 336
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 941
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:23.338110+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -761,6 +1154,20 @@
 "average_speed": 2.791,
 "elevation_gain": 2.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 125
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 353
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:22.994837+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -997,6 +1404,25 @@
 "average_speed": 2.031,
 "elevation_gain": 4.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 141
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 380
+},
+{
+"name": "5K",
+"distance": 5000.0,
+"elapsed_time": 2620
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:22.674405+00:00",
+"best_efforts_version": 2,
 "streak": 2
 },
 {
@@ -1013,6 +1439,20 @@
 "average_speed": 3.381,
 "elevation_gain": 2.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 115
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 293
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:22.370179+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -1029,6 +1469,25 @@
 "average_speed": 3.082,
 "elevation_gain": 11.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 121
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 305
+},
+{
+"name": "5K",
+"distance": 5000.0,
+"elapsed_time": 1602
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:22.062412+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -1045,6 +1504,35 @@
 "average_speed": 1.09,
 "elevation_gain": 1858.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 125
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 476
+},
+{
+"name": "5K",
+"distance": 5000.0,
+"elapsed_time": 3751
+},
+{
+"name": "10K",
+"distance": 10000.0,
+"elapsed_time": 9302
+},
+{
+"name": "Half-Marathon",
+"distance": 21097.0,
+"elapsed_time": 23274
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:21.676478+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -1061,6 +1549,35 @@
 "average_speed": 1.075,
 "elevation_gain": 1919.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 112
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 436
+},
+{
+"name": "5K",
+"distance": 5000.0,
+"elapsed_time": 3660
+},
+{
+"name": "10K",
+"distance": 10000.0,
+"elapsed_time": 8440
+},
+{
+"name": "Half-Marathon",
+"distance": 21097.0,
+"elapsed_time": 19715
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:21.161389+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -1077,6 +1594,20 @@
 "average_speed": 2.076,
 "elevation_gain": 4.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 153
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 409
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:20.531385+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -1093,6 +1624,25 @@
 "average_speed": 3.142,
 "elevation_gain": 5.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 118
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 303
+},
+{
+"name": "5K",
+"distance": 5000.0,
+"elapsed_time": 1596
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:20.204488+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -1109,6 +1659,20 @@
 "average_speed": 2.854,
 "elevation_gain": 2.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 133
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 339
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:19.813346+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -1185,6 +1749,25 @@
 "average_speed": 3.373,
 "elevation_gain": 7.0,
 "source": "strava",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 107
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 272
+},
+{
+"name": "5K",
+"distance": 5000.0,
+"elapsed_time": 1443
+}
+],
+"best_efforts_synced_at": "2026-10-28T20:45:19.440001+00:00",
+"best_efforts_version": 2,
 "streak": 1
 },
 {
@@ -1567,6 +2150,11 @@
 "average_heartrate": 152.9,
 "average_speed": 2.731,
 "elevation_gain": 1.0,
+"temperature_min": 20.1,
+"temperature_max": 20.1,
+"temperature_source": "open-meteo",
+"weather_code": 3,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -1597,6 +2185,11 @@
 "average_heartrate": 154.8,
 "average_speed": 2.737,
 "elevation_gain": 7.0,
+"temperature_min": 16.4,
+"temperature_max": 16.8,
+"temperature_source": "open-meteo",
+"weather_code": 51,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -1627,6 +2220,11 @@
 "average_heartrate": 157.0,
 "average_speed": 2.871,
 "elevation_gain": 1.0,
+"temperature_min": 18.7,
+"temperature_max": 18.7,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -1657,6 +2255,11 @@
 "average_heartrate": 156.9,
 "average_speed": 2.754,
 "elevation_gain": 1.0,
+"temperature_min": 21.3,
+"temperature_max": 21.3,
+"temperature_source": "open-meteo",
+"weather_code": 2,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -1687,6 +2290,11 @@
 "average_heartrate": 163.8,
 "average_speed": 7.081,
 "elevation_gain": 671.0,
+"temperature_min": 18.2,
+"temperature_max": 21.3,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "device_watts": true,
 "power_efforts": [
@@ -1731,6 +2339,11 @@
 "average_heartrate": 172.9,
 "average_speed": 3.496,
 "elevation_gain": 1.0,
+"temperature_min": 12.8,
+"temperature_max": 12.8,
+"temperature_source": "open-meteo",
+"weather_code": 3,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -1761,6 +2374,11 @@
 "average_heartrate": 179.0,
 "average_speed": 3.263,
 "elevation_gain": 10.0,
+"temperature_min": 17.1,
+"temperature_max": 17.5,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -1796,6 +2414,11 @@
 "average_heartrate": 175.1,
 "average_speed": 1.527,
 "elevation_gain": 1154.0,
+"temperature_min": 17.4,
+"temperature_max": 24.9,
+"temperature_source": "open-meteo",
+"weather_code": 3,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -1841,6 +2464,11 @@
 "average_heartrate": 165.3,
 "average_speed": 2.807,
 "elevation_gain": 6.0,
+"temperature_min": 23.1,
+"temperature_max": 23.1,
+"temperature_source": "open-meteo",
+"weather_code": 1,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -1871,6 +2499,11 @@
 "average_heartrate": 159.9,
 "average_speed": 2.711,
 "elevation_gain": 3.0,
+"temperature_min": 21.9,
+"temperature_max": 21.9,
+"temperature_source": "open-meteo",
+"weather_code": 3,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -1901,6 +2534,11 @@
 "average_heartrate": 183.7,
 "average_speed": 3.517,
 "elevation_gain": 36.0,
+"temperature_min": 14.8,
+"temperature_max": 19.6,
+"temperature_source": "open-meteo",
+"weather_code": 1,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -2000,6 +2638,11 @@
 "average_heartrate": 152.4,
 "average_speed": 6.668,
 "elevation_gain": 578.0,
+"temperature_min": 22.7,
+"temperature_max": 26.3,
+"temperature_source": "open-meteo",
+"weather_code": 1,
+"weather_source": "open-meteo",
 "source": "strava",
 "device_watts": true,
 "power_efforts": [
@@ -2194,6 +2837,11 @@
 "average_heartrate": 118.1,
 "average_speed": 1.083,
 "elevation_gain": 319.0,
+"temperature_min": 13.2,
+"temperature_max": 15.1,
+"temperature_source": "open-meteo",
+"weather_code": 51,
+"weather_source": "open-meteo",
 "source": "strava",
 "streak": 1
 },
@@ -2210,6 +2858,11 @@
 "average_heartrate": 131.1,
 "average_speed": 1.027,
 "elevation_gain": 605.0,
+"temperature_min": 8.4,
+"temperature_max": 11.8,
+"temperature_source": "open-meteo",
+"weather_code": 51,
+"weather_source": "open-meteo",
 "source": "strava",
 "streak": 1
 },
@@ -2242,6 +2895,11 @@
 "average_heartrate": 161.0,
 "average_speed": 0.839,
 "elevation_gain": 1898.0,
+"temperature_min": 26.0,
+"temperature_max": 31.9,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -2304,6 +2962,11 @@
 "average_heartrate": 121.3,
 "average_speed": 0.857,
 "elevation_gain": 833.0,
+"temperature_min": 7.8,
+"temperature_max": 9.5,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "streak": 1
 },
@@ -2336,6 +2999,11 @@
 "average_heartrate": 170.6,
 "average_speed": 3.076,
 "elevation_gain": 4.0,
+"temperature_min": 23.8,
+"temperature_max": 23.8,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -2399,6 +3067,11 @@
 "average_heartrate": 122.3,
 "average_speed": 0.843,
 "elevation_gain": 1070.0,
+"temperature_min": 1.9,
+"temperature_max": 8.8,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "streak": 1
 },
@@ -2415,6 +3088,11 @@
 "average_heartrate": 118.0,
 "average_speed": 0.858,
 "elevation_gain": 1460.0,
+"temperature_min": 0.3,
+"temperature_max": 8.3,
+"temperature_source": "open-meteo",
+"weather_code": 1,
+"weather_source": "open-meteo",
 "source": "strava",
 "streak": 2
 },
@@ -2431,6 +3109,11 @@
 "average_heartrate": 132.3,
 "average_speed": 0.892,
 "elevation_gain": 2057.0,
+"temperature_min": -0.6,
+"temperature_max": 7.8,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "streak": 3
 },
@@ -2447,6 +3130,11 @@
 "average_heartrate": 166.0,
 "average_speed": 2.996,
 "elevation_gain": 0.0,
+"temperature_min": 21.1,
+"temperature_max": 22.8,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -2499,6 +3187,11 @@
 "average_heartrate": 175.2,
 "average_speed": 3.193,
 "elevation_gain": 1.0,
+"temperature_min": 22.3,
+"temperature_max": 24.9,
+"temperature_source": "open-meteo",
+"weather_code": 1,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -2540,6 +3233,11 @@
 "average_heartrate": 165.8,
 "average_speed": 2.808,
 "elevation_gain": 13.0,
+"temperature_min": 13.7,
+"temperature_max": 14.8,
+"temperature_source": "open-meteo",
+"weather_code": 3,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
@@ -2576,6 +3274,11 @@
 "average_heartrate": 157.9,
 "average_speed": 7.031,
 "elevation_gain": 534.0,
+"temperature_min": 14.9,
+"temperature_max": 17.1,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "device_watts": true,
 "power_efforts": [
@@ -2620,6 +3323,11 @@
 "average_heartrate": 181.2,
 "average_speed": 3.945,
 "elevation_gain": 15.0,
+"temperature_min": 13.1,
+"temperature_max": 13.1,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "source": "strava",
 "best_efforts": [
 {
