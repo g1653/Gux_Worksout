@@ -5,8 +5,8 @@ import sys
 import arrow
 import stravalib
 from config import MAPPING_TYPE, run_map
-from gpxtrackposter import track_loader
 from sqlalchemy import func
+from strava_auth import refresh_tokens
 
 from polyline_processor import filter_out
 from strava_streams import (
@@ -62,7 +62,8 @@ class Generator:
         self.refresh_token = refresh_token
 
     def check_access(self):
-        response = self.client.refresh_access_token(
+        response = refresh_tokens(
+            self.client,
             client_id=self.client_id,
             client_secret=self.client_secret,
             refresh_token=self.refresh_token,
@@ -187,6 +188,8 @@ class Generator:
             print(f"\nAligned {renamed_count} activity title(s) from Strava.")
 
     def sync_from_data_dir(self, data_dir, file_suffix="gpx", activity_title_dict={}):
+        from gpxtrackposter import track_loader
+
         loader = track_loader.TrackLoader()
         tracks = loader.load_tracks(
             data_dir, file_suffix=file_suffix, activity_title_dict=activity_title_dict

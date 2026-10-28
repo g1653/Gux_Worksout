@@ -1,168 +1,60 @@
-## note1: use v2.0 need change vercel setting from Gatsby to Vite
+# Guxiang 的运动主页
 
-## note2: 2023.09.26 garmin need secret_string(and in Actions) get `python run_page/garmin_sync.py ${secret_string}` if cn `python run_page/garmin_sync.py ${secret_string} --is-cn`
+使用 Strava 同步跑步、骑行、徒步和训练记录，只保留新版仪表盘。
 
-## note3: 2024.08.19: Added `Elevation Gain` field
+## 本地预览
 
-- For old data: To include `Elevation Gain` for past activities, perform a full reimport
+需要 Node.js 20.19+（推荐 22+）、pnpm 8.9 和 Python 3.12。
 
-# [打造个人户外运动主页](http://workouts.ben29.xyz)
-
-![screenshot](https://user-images.githubusercontent.com/6956444/163125711-24d0ad99-490d-4c04-b89f-5b7fe776eb38.png)
-
-简体中文 | [English](README.md)
-
-本项目基于 [running_page](https://github.com/yihong0618/running_page/blob/master/README-CN.md) , 添加了支持多种运动类型。部署可参考原项目操作步骤
-
-## 新增特性
-
-### 新版仪表盘与经典主页
-
-- 顶部的「经典版 / 新版」按钮可在两种主页之间切换。新版地址为 `/dashboard`，经典版地址为 `/classic`；首次访问 `/` 仍显示经典版，之后会记住此浏览器上次选择的版本。
-- 新版适配 running_page 3.0 的原版组件：年度 / 月度 / 周目标、连续记录、活动热力图、分页活动记录、个人概览、中国足迹地图、路线地图、个人最佳、活动日历及轨迹墙。目标初始值沿用参考站，在 `src/components/Dashboard/config.ts` 中可修改；活动年份、类型和距离均可筛选。
-- 两版共用 `src/static/activities.json` 和现有地图组件，保留骑行、徒步、训练、自驾、飞行、铁路等类型。运动统计延续原有规则，不计入自驾、飞行和铁路；旅行仍展示在地图和活动列表中。
-- 版本切换保留 `#run_<活动 ID>`，历史年份的活动也可在两版间继续查看。两版共用深色 / 浅色主题设置。
-- 新版 Summary 地址为 `/dashboard/summary`，支持年 / 月 / 周 / 日 / Life 汇总及运动类型和年份筛选；经典版汇总页为 `/classic/summary`。`/summary` 跟随上次选择的版本，汇总页上的版本按钮也可相互切换。路由和切换链接支持 Vite 的 `PATH_PREFIX` 子目录部署；Vercel 继续使用现有的 SPA 重写规则。
-- 热力图按周一到周日排列，排除自驾、飞行和铁路；年度 / 月度 / 周目标仅统计跑步类活动（包含越野跑和虚拟跑），不随活动列表的类型筛选改变。地图保留全部轨迹，默认镜头定位当前范围中最近一条有轨迹的活动。
-- 个人最佳仅使用 Strava 官方 `best_efforts` 的标准距离成绩及 `elapsed_time`（包含停顿），不按整次活动时间估算。新增数据库字段会自动迁移；常规 Strava 同步会每次补齐最多 20 条未缓存的 5 公里以上跑步记录。历史回填可运行 `python run_page/strava_best_efforts.py --limit 0`，凭据读取已有 `.env` 或环境变量；在 Strava 裁剪活动 / 删除分段成绩后，可用 `--refresh` 重新获取。回填进度逐条保存，缺失接口数据或请求失败时保留已缓存成绩。
-- 前端回归测试：`pnpm run test:dashboard`；成绩同步测试：`python -m unittest discover -s tests -p 'test_strava*.py'`。
-- 适配组件来源于 [running_page](https://github.com/yihong0618/running_page)，参考版本为 `61563c049c75dc8813283d1a109941d751dcd0d4`，原 MIT 许可保留在 `src/components/Dashboard/LICENSE`。新版样式限定在 `.running-dashboard` 内。
-
-### 原有功能
-
-1. 支持多种运动类型，如骑行、徒步、游泳
-1. 支持 APP 数据获取
-   - **[咕咚](#codoon咕咚)** (因咕咚限制单个设备原因，无法自动化)
-   - **[行者](#行者)**
-1. 支持 [自驾(Google 路书)](#自驾google路书) , 把自驾路线也展示在地图上
-
-## 一些个性化选项
-
-### 自定义运动颜色
-
-- 修改骑行颜色: `src/utils/const.js` 里的 `RIDE_COLOR`
-
-### 新增运动类型
-
-- 修改 `scripts/config.py`, `TYPE_DICT` 增加类型映射关系, `MAPPING_TYPE` 里增加运动类型
-- 修改 `src/utils/const.js`, 增加类型标题，并加入到 `RUN_TITLES`
-- 修改 `src/utils/util.js` 里的 `colorFromType`, 增加 case 指定颜色; `titleForRun` 增加 case 指定类型标题
-- 参考这个 [commit](https://github.com/ben-29/workouts_page/commit/f3a35884d626009d33e05adc76bbc8372498f317)
-- 或 [留言](https://github.com/ben-29/workouts_page/issues/20)
-
----
-
-### Codoon（咕咚）
-
-<details>
-<summary>获取您的咕咚数据</summary>
-
-```python
-python3(python) run_page/codoon_sync.py ${your mobile or email} ${your password}
+```powershell
+pnpm install --frozen-lockfile
+pnpm dev --host 127.0.0.1
 ```
 
-示例：
+默认打开 http://127.0.0.1:5173/，代码修改会自动刷新。首页 `/`、汇总页 `/summary`；旧链接会跳转到新版，经典页面和版本切换已移除。
 
-```python
-python3(python) run_page/codoon_sync.py 13333xxxx xxxx
+## 修改个人信息
+
+- `src/static/site-metadata.ts`：昵称、标题、头像、GitHub / Strava 链接。
+- `src/components/Dashboard/config.ts`：年、月、周目标（当前是模板参考目标，按自己的计划修改）。
+- `src/utils/const.ts`：地图外观；可以通过 `VITE_MAPBOX_TOKEN` 使用自己的 Mapbox 公开访问令牌。
+
+## Strava 本地同步
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-strava.txt
+Copy-Item .env.example .env  # 已有 .env 时跳过，避免覆盖凭据
+# 在 .env 中填写客户端信息
+.\.venv\Scripts\python.exe authorize-strava.py --github-repo g1653/Gux_Worksout
+.\sync-strava-local.ps1
 ```
 
-> 注：我增加了 Codoon 可以导出 gpx 功能, 执行如下命令，导出的 gpx 会加入到 GPX_OUT 中，方便上传到其它软件
+授权脚本会打开浏览器，请允许读取运动记录（`activity:read_all`）。它将凭据保存在被 Git 忽略的 `.env`，并可同步到指定仓库的 Actions Secrets。同步脚本会自动刷新访问令牌，并保存最新刷新令牌。
 
-```python
-python3(python) run_page/codoon_sync.py ${your mobile or email} ${your password} --with-gpx
+`--force` 重新读取全部历史记录；`--timeline-limit 0` 跳过详细时间线；`--skip-temperature-backfill` 跳过天气补全。初次导入可能受 Strava API 速率限制，失败后可再次运行。
+
+## GitHub 自动更新
+
+仓库 Secrets：`STRAVA_CLIENT_ID`、`STRAVA_CLIENT_SECRET`、`STRAVA_CLIENT_REFRESH_TOKEN`，以及已保存的 `STRAVA_ACCESS_TOKEN`。自动同步使用刷新令牌取得有效的访问令牌。
+
+`Sync Strava` 工作流在 `main` 分支每天北京时间 00:00 运行，也可在 Actions 中手动运行。更新数据会提交回仓库。GitHub 的计划任务可能延迟，长期无活动的公开仓库可能暂停计划任务。
+
+Strava 刷新令牌会轮换。工作流将最新令牌以 AES-GCM 加密保存在 `.github/strava-token.enc`，密钥来自 Actions Secret 中的客户端密钥；仓库中没有明文凭据，也不需要额外的 GitHub 管理令牌。重新授权并更新初始刷新令牌 Secret 后，会自动开始新的令牌链。同步失败时也会先保留已轮换的加密令牌。
+
+本地 PowerShell 同步脚本在检测到 GitHub CLI 时，也会自动更新云端 Secrets。若直接运行 Python 同步脚本，请随后执行 `gh secret set --repo g1653/Gux_Worksout --env-file .env`。本地同步前先 `git pull`，以读取云端最新的加密刷新令牌；不要同时运行本地和云端同步。云端更新后的运动数据也会随 `git pull` 出现在本地预览中。
+
+网页部署可使用现有 Vercel 配置或手动运行 `Publish GitHub Pages` 工作流。GitHub Pages 需先在仓库 Settings → Pages 中选择 GitHub Actions；当前本地预览不依赖网站部署。
+
+## 验证
+
+```powershell
+pnpm run typecheck
+pnpm run test:dashboard
+pnpm run build
+.\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_strava*.py'
 ```
 
-示例：
+## 致谢与许可
 
-```python
-python3(python) run_page/codoon_sync.py 13333xxxx xxxx --with-gpx
-```
-
-> 注：因为登录 token 有过期时间限制，我增加了 refresh_token&user_id 登陆的方式， refresh_token 及 user_id 在您登陆过程中会在控制台打印出来
-
-![image](https://user-images.githubusercontent.com/6956444/105690972-9efaab00-5f37-11eb-905c-65a198ad2300.png)
-
-示例：
-
-```python
-python3(python) run_page/codoon_sync.py 54bxxxxxxx fefxxxxx-xxxx-xxxx --from-auth-token
-```
-
-</details>
-
-### 行者
-
-<details>
-<summary>获取您的行者数据</summary>
-
-```python
-python3(python) scripts/xingzhe_sync.py ${your mobile or email} ${your password}
-```
-
-示例：
-
-```python
-python3(python) scripts/xingzhe_sync.py 13333xxxx xxxx
-```
-
-> 注：我增加了 行者 可以导出 gpx 功能, 执行如下命令，导出的 gpx 会加入到 GPX_OUT 中，方便上传到其它软件
-
-```python
-python3(python) scripts/xingzhe_sync.py ${your mobile or email} ${your password} --with-gpx
-```
-
-示例：
-
-```python
-python3(python) scripts/xingzhe_sync.py 13333xxxx xxxx --with-gpx
-```
-
-> 注：因为登录 token 有过期时间限制，我增加了 refresh_token&user_id 登陆的方式， refresh_token 及 user_id 在您登陆过程中会在控制台打印出来
-
-![image](https://user-images.githubusercontent.com/6956444/106879771-87c97380-6716-11eb-9c28-fbf70e15e1c3.png)
-
-示例：
-
-```python
-python3(python) scripts/xingzhe_sync.py w0xxx 185000 --from-auth-token
-```
-
-</details>
-
-### 自驾(Google 路书)
-
-<details>
-<summary>导入谷歌地图的KML路书</summary>
-
-1. 使用 [谷歌地图](https://www.google.com/maps/d/) ，创建地图(路线放到同一个图层)
-2. 把图层导出为 KML 文件
-3. 把 kml 文件重命名为 `import.kml`, 放到 `scripts`目录
-4. 修改`scripts/kml2polyline.py`, 填入路线相关信息
-
-```
-# TODO modify here
-# 路线名称
-track.name = "2020-10 西藏 Road Trip"
-# 开始/结束时间 年月日时分
-track.start_time = datetime(2020, 9, 29, 10, 0)
-track.end_time = datetime(2020, 10, 10, 18, 0)
-# 总路程
-distance = 4000  # KM
-# 总天数
-days = 12
-# 平均每天自驾时长
-hours_per_day = 6
-```
-
-5. 控制台执行以下脚本
-
-```python
-python3(python) scripts\kml2polyline.py
-```
-
-</details>
-
-# 致谢
-
-- @[yihong0618](https://github.com/yihong0618) 特别棒的项目 [running_page](https://github.com/yihong0618/running_page) 非常感谢
+基于 [Neewii_Worksout](https://github.com/Niewei-Yang/Neewii_Worksout)、[workouts_page](https://github.com/ben-29/workouts_page) 和 [running_page](https://github.com/yihong0618/running_page)。保留上游 MIT 许可及 `src/components/Dashboard/LICENSE`。

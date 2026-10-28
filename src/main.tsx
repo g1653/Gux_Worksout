@@ -7,7 +7,6 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import Index from './pages';
 import NotFound from './pages/404';
 import ReactGA from 'react-ga4';
 import {
@@ -16,72 +15,37 @@ import {
 } from './utils/const';
 import '@/styles/index.css';
 import { withOptionalGAPageTracking } from './utils/trackRoute';
-import HomePage from '@/pages/total';
-import { getHomeView } from '@/hooks/useHomeView';
 
 const Dashboard = React.lazy(() => import('@/pages/dashboard'));
-
-const HomeEntry = () => {
+// Keep old bookmarks useful without shipping the old pages.
+const Redirect = ({ to }: { to: string }) => {
   const { search, hash } = useLocation();
-  return getHomeView() === 'dashboard' ? (
-    <Navigate to={{ pathname: '/dashboard', search, hash }} replace />
-  ) : (
-    <Index />
-  );
+  return <Navigate to={{ pathname: to, search, hash }} replace />;
 };
-const SummaryEntry = () => {
-  const { search, hash } = useLocation();
-  return getHomeView() === 'dashboard' ? (
-    <Navigate to={{ pathname: '/dashboard/summary', search, hash }} replace />
-  ) : (
-    <HomePage />
-  );
-};
-
-if (USE_GOOGLE_ANALYTICS) {
-  ReactGA.initialize(GOOGLE_ANALYTICS_TRACKING_ID);
-}
-
+if (USE_GOOGLE_ANALYTICS) ReactGA.initialize(GOOGLE_ANALYTICS_TRACKING_ID);
+const dashboard = withOptionalGAPageTracking(
+  <React.Suspense
+    fallback={
+      <div role="status" className="p-8">
+        正在加载运动主页…
+      </div>
+    }
+  >
+    <Dashboard />
+  </React.Suspense>
+);
 const routes = createBrowserRouter(
   [
-    {
-      path: '/',
-      element: withOptionalGAPageTracking(<HomeEntry />),
-    },
-    {
-      path: 'classic',
-      element: withOptionalGAPageTracking(<Index />),
-    },
-    {
-      path: 'dashboard/:section?',
-      element: withOptionalGAPageTracking(
-        <React.Suspense
-          fallback={
-            <div role="status" className="p-8">
-              正在加载新版主页…
-            </div>
-          }
-        >
-          <Dashboard />
-        </React.Suspense>
-      ),
-    },
-    {
-      path: 'summary',
-      element: withOptionalGAPageTracking(<SummaryEntry />),
-    },
-    {
-      path: 'classic/summary',
-      element: withOptionalGAPageTracking(<HomePage />),
-    },
-    {
-      path: '*',
-      element: withOptionalGAPageTracking(<NotFound />),
-    },
+    { path: '/', element: dashboard },
+    { path: 'summary', element: dashboard },
+    { path: 'dashboard', element: <Redirect to="/" /> },
+    { path: 'dashboard/summary', element: <Redirect to="/summary" /> },
+    { path: 'classic', element: <Redirect to="/" /> },
+    { path: 'classic/summary', element: <Redirect to="/summary" /> },
+    { path: '*', element: <NotFound /> },
   ],
   { basename: import.meta.env.BASE_URL }
 );
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <HelmetProvider>

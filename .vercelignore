@@ -1,2 +1,15 @@
-requirements.txt  
-requirements-dev.txt  
+.git
+.env
+.env.*
+.venv
+.cache*
+.tools
+.pnpm-store
+node_modules
+dist
+run_page
+tests
+requirements*.txt
+*.py
+*.ps1
+*.db

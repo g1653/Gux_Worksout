@@ -3,8 +3,11 @@ import {
   isActivityExcludedFromTotals,
   locationForRun,
   typeForRun,
+  type Activity,
 } from '@/utils/utils';
-import activities from '@/static/activities.json';
+import activityData from '@/static/activities.json';
+
+const activities = activityData as Activity[];
 
 // standardize country names for consistency between mapbox and activities data
 const standardizeCountryName = (country: string): string => {

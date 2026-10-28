@@ -8,6 +8,7 @@ import {
 } from '../hooks/useActivities';
 import { AVATAR } from '../config';
 import { locationForRun } from '@/utils/utils';
+import metadata from '@/static/site-metadata';
 
 interface ProfileCardProps {
   activities: Activity[];
@@ -75,6 +76,9 @@ export const ProfileCard = memo(function ProfileCard({
 
   return (
     <div className="hover:border-[var(--color-accent)]/30 hover:bg-[var(--color-accent)]/5 hover:shadow-[var(--color-accent)]/5 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 hover:shadow-lg">
+      <a href={metadata.stravaUrl} className="mb-4 block font-semibold">
+        {metadata.name}
+      </a>
       {/* Avatar top-left + Distance */}
       <div className="flex items-center gap-4">
         <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 border-[var(--color-border)]">

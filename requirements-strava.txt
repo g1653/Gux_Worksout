@@ -1,0 +1,8 @@
+# Dependencies used by the Strava dashboard sync (no other providers required).
+stravalib==0.10.4
+arrow>=1.3,<2
+geopy>=2.4,<3
+sqlalchemy>=2.0,<2.1
+polyline>=2,<3
+haversine==2.8.0
+pycryptodome>=3.23,<4

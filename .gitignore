@@ -26,6 +26,17 @@ route.png
 route.svg
 
 .env
+.env.*
+!.env.example
+.cache-*
+.tools/
+.vercel/
+.pnpm-store/
+.strava-tokens.json
+.github/strava-token.tmp
+*.db-journal
+*.db-wal
+*.db-shm
 
 # Timeline batch coordination / atomic write files
 /public/data/activity-timelines/.sync.lock

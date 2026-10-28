@@ -1,20 +1,18 @@
-import Layout from '@/components/Layout';
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
-
-const NotFoundPage = () => {
-  const { siteUrl } = useSiteMetadata();
+export default function NotFoundPage() {
+  const { siteTitle } = useSiteMetadata();
   return (
-    <Layout>
-      <h1 className="my-2.5 text-5xl font-bold italic">404</h1>
-      <p>This page doesn&#39;t exist.</p>
-      <p className="text-gray-400">
-        If you wanna more message, you could visit{' '}
-        <a className="font-bold text-gray-400" href={siteUrl}>
-          {siteUrl}
-        </a>
-      </p>
-    </Layout>
+    <main className="mx-auto flex min-h-screen max-w-xl flex-col justify-center gap-4 px-6">
+      <Helmet>
+        <title>页面未找到 · {siteTitle}</title>
+      </Helmet>
+      <h1 className="text-5xl font-bold">404</h1>
+      <p>这个页面不存在。</p>
+      <Link to="/" className="underline">
+        返回运动主页
+      </Link>
+    </main>
   );
-};
-
-export default NotFoundPage;
+}

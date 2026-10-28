@@ -1,48 +1,14 @@
-interface ISiteMetadataResult {
-  siteTitle: string;
-  siteUrl: string;
-  description: string;
-  keywords: string;
-  logo: string;
-  navLinks: {
-    name: string;
-    url: string;
-  }[];
-}
-
-const getBasePath = () => {
-  const baseUrl = import.meta.env.BASE_URL;
-  return baseUrl === '/' ? '' : baseUrl;
+// Public profile only. Credentials belong in .env / GitHub Actions Secrets.
+const data = {
+  name: 'Guxiang',
+  brand: 'GUXIANG',
+  siteTitle: 'Guxiang 的运动主页',
+  siteUrl: 'https://g1653.github.io/Gux_Worksout/',
+  githubUrl: 'https://github.com/g1653/Gux_Worksout',
+  stravaUrl: 'https://www.strava.com/athletes/157940104',
+  logo: 'https://avatars.githubusercontent.com/u/238671315?v=4',
+  description:
+    'Guxiang 的运动记录：跑步、骑行、徒步与训练，通过 Strava 持续同步。',
+  keywords: 'Guxiang, 运动, 跑步, 骑行, 徒步, Strava, workouts',
 };
-
-const data: ISiteMetadataResult = {
-  siteTitle: 'Neewii的Workouts Map',
-  siteUrl: 'neewii-worksout.vercel.app',
-  logo: 'https://avatars.githubusercontent.com/u/138655239?v=4',
-  description: 'Personal site and blog',
-  keywords: 'workouts, running, cycling, riding, roadtrip, hiking, swimming',
-  navLinks: [
-    {
-      name: 'Summary',
-      url: `${getBasePath()}/summary`,
-    },
-    {
-      name: 'Strava',
-      url: `https://www.strava.com/athletes/193524135`,
-    },
-    {
-      name: 'WeihangのPage',
-      url: 'https://weihang-worksout.vercel.app/',
-    },
-    {
-      name: 'YihongのBlog',
-      url: 'https://blog.yihong0618.me/',
-    },
-    {
-      name: 'About',
-      url: 'https://github.com/ben-29/workouts_page/blob/master/README-CN.md',
-    },
-  ],
-};
-
 export default data;

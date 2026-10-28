@@ -1,5 +1,8 @@
 import argparse
 import json
+import os
+import logging
+from strava_auth import load_local_env
 
 from backfill_temperatures import backfill_temperatures
 from config import JSON_FILE, SQL_FILE
@@ -21,6 +24,8 @@ def run_strava_sync(
     temperature_limit=25,
     timeline_limit=20,
 ):
+    logging.getLogger("stravalib.model").setLevel(logging.ERROR)
+    logging.getLogger("stravalib.attributes").setLevel(logging.ERROR)
     generator = Generator(SQL_FILE)
     generator.set_strava_config(client_id, client_secret, refresh_token)
     # judge sync types is only running or not
@@ -63,10 +68,15 @@ def run_strava_sync(
 
 
 if __name__ == "__main__":
+    load_local_env()
     parser = argparse.ArgumentParser()
-    parser.add_argument("client_id", help="strava client id")
-    parser.add_argument("client_secret", help="strava client secret")
-    parser.add_argument("refresh_token", help="strava refresh token")
+    parser.add_argument("client_id", nargs="?", default=os.getenv("STRAVA_CLIENT_ID"))
+    parser.add_argument(
+        "client_secret", nargs="?", default=os.getenv("STRAVA_CLIENT_SECRET")
+    )
+    parser.add_argument(
+        "refresh_token", nargs="?", default=os.getenv("STRAVA_CLIENT_REFRESH_TOKEN")
+    )
     parser.add_argument(
         "--only-run",
         dest="only_run",
@@ -99,6 +109,8 @@ if __name__ == "__main__":
         help="maximum pending run/ride/hike timelines per sync; 0 skips backfill",
     )
     options = parser.parse_args()
+    if not all((options.client_id, options.client_secret, options.refresh_token)):
+        parser.error("Set Strava credentials in .env or environment variables.")
     run_strava_sync(
         options.client_id,
         options.client_secret,

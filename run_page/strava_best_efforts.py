@@ -10,6 +10,7 @@ from pathlib import Path
 from config import JSON_FILE, SQL_FILE
 from generator.db import Activity, init_db
 from strava_streams import is_run_activity
+from strava_auth import load_local_env, refresh_tokens
 
 BEST_EFFORTS_VERSION = 2
 DISTANCES = {
@@ -138,12 +139,7 @@ def update_json(session, json_path=JSON_FILE):
 
 def authenticated_client():
     """Load local credentials without logging tokens or request URLs."""
-    env_path = Path(__file__).resolve().parents[1] / ".env"
-    if env_path.exists():
-        for line in env_path.read_text(encoding="utf-8").splitlines():
-            if "=" in line and not line.lstrip().startswith("#"):
-                key, val = line.split("=", 1)
-                os.environ.setdefault(key.strip(), val.strip().strip("\"'"))
+    load_local_env()
     import stravalib
 
     logging.getLogger("stravalib.attributes").setLevel(logging.ERROR)
@@ -157,7 +153,8 @@ def authenticated_client():
     if any(not os.getenv(key) for key in required):
         raise SystemExit("Strava credentials are required in the environment or .env.")
     client = stravalib.Client()
-    token = client.refresh_access_token(
+    token = refresh_tokens(
+        client,
         client_id=os.environ[required[0]],
         client_secret=os.environ[required[1]],
         refresh_token=os.environ[required[2]],
