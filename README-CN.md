@@ -34,6 +34,10 @@ Copy-Item .env.example .env  # 已有 .env 时跳过，避免覆盖凭据
 
 `--force` 重新读取全部历史记录；`--timeline-limit 0` 跳过详细时间线；`--skip-temperature-backfill` 跳过天气补全。初次导入可能受 Strava API 速率限制，失败后可再次运行。
 
+每次同步都会补齐带轨迹活动的行政区信息：以轨迹起点反查国家、省份和城市，保存到 SQLite 和 `activities.json`。优先采用行政区编码，兼容直辖市及香港；省份地图不再从街道名称猜测省份。查询失败或结果不完整时保留原地点，下次继续补齐。没有定位/轨迹的活动保留未知地点。省份统计表示活动起点所属省级地区，不表示跨省路线途经的全部地区。
+
+单独重试地点补齐：`.\.venv\Scripts\python.exe run_page/backfill_locations.py`。查看详情时间线待拉取数量：`.\.venv\Scripts\python.exe run_page/strava_timeline_sync.py --dry-run`。已获取的时间线按活动 ID 单独保存，后续批次会跳过完成项；缺失的数据不会编造。
+
 ## GitHub 自动更新
 
 仓库 Secrets：`STRAVA_CLIENT_ID`、`STRAVA_CLIENT_SECRET`、`STRAVA_CLIENT_REFRESH_TOKEN`，以及已保存的 `STRAVA_ACCESS_TOKEN`。自动同步使用刷新令牌取得有效的访问令牌。
