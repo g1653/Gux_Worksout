@@ -96,6 +96,7 @@ def calculate_power_efforts(times, watts, durations=POWER_DURATIONS):
 
 def sync_power_efforts(client, session, limit=20, refresh=False):
     from strava_best_efforts import value
+    from strava_timeline_sync import normalize_streams
 
     candidates = [
         a
@@ -132,7 +133,12 @@ def sync_power_efforts(client, session, limit=20, refresh=False):
                     ) > len(values):
                         raise ValueError("Incomplete power stream")
                     data.append(values)
-                efforts = calculate_power_efforts(*data)
+                normalized = normalize_streams(
+                    {"time": {"data": data[0]}, "watts": {"data": data[1]}}
+                )
+                efforts = calculate_power_efforts(
+                    normalized["time"]["data"], normalized["watts"]["data"]
+                )
             else:
                 efforts = []
             activity.device_watts = measured

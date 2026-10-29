@@ -26,6 +26,7 @@ const colorClassMapping: { [key: string]: string } = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  optimizeDeps: { entries: ['index.html'] },
   plugins: [
     react(),
     tailwindcss(),

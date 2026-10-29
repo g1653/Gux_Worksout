@@ -97,8 +97,8 @@ class PowerEffortsTest(unittest.TestCase):
                 def streams(activity_id, **kwargs):
                     calls.append(activity_id)
                     return {
-                        "time": {"data": list(range(61))},
-                        "watts": {"data": [250] * 61},
+                        "time": {"data": [0] + list(range(61))},
+                        "watts": {"data": [999] + [250] * 61},
                     }
 
                 client = SimpleNamespace(get_activity_streams=streams)
