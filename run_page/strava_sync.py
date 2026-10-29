@@ -2,6 +2,8 @@ import argparse
 import json
 import os
 import logging
+from types import SimpleNamespace
+from backfill_locations import backfill_locations
 from strava_auth import load_local_env
 
 from backfill_temperatures import backfill_temperatures
@@ -34,6 +36,23 @@ def run_strava_sync(
     # if you want to refresh data change False to True
     generator.only_run = only_run
     generator.sync(force)
+    # Keep known locations on network failure and retry missing ones every sync.
+    backfill_locations(
+        SimpleNamespace(
+            db=SQL_FILE,
+            json=JSON_FILE,
+            limit=100,
+            user_agent="g1653-workouts-location-sync",
+            timeout=15,
+            cache_precision=4,
+            sleep=1.2,
+            language="zh-CN",
+            dry_run=False,
+            commit_every=10,
+            no_json=True,
+        )
+    )
+    generator.session.expire_all()
     sync_best_efforts(generator.client, generator.session, limit=20, refresh=force)
     sync_power_efforts(generator.client, generator.session, limit=20, refresh=force)
 

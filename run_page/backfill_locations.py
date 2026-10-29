@@ -10,6 +10,7 @@ from geopy.geocoders import Nominatim
 
 from config import JSON_FILE, SQL_FILE
 from generator import Generator
+from activity_locations import needs_location, structured_location
 
 
 def first_point(summary_polyline):
@@ -28,17 +29,14 @@ def location_cache_key(point, precision):
 
 def load_empty_location_rows(conn, limit):
     sql = """
-        SELECT run_id, name, start_date_local, summary_polyline
+        SELECT run_id, name, start_date_local, summary_polyline, location_country
         FROM activities
-        WHERE (location_country IS NULL OR location_country = '')
-          AND summary_polyline IS NOT NULL
+        WHERE summary_polyline IS NOT NULL
           AND summary_polyline != ''
         ORDER BY start_date_local DESC
     """
-    if limit:
-        sql += " LIMIT ?"
-        return conn.execute(sql, (limit,)).fetchall()
-    return conn.execute(sql).fetchall()
+    rows = [row[:4] for row in conn.execute(sql).fetchall() if needs_location(row[4])]
+    return rows[:limit] if limit else rows
 
 
 def rebuild_activities_json(db_path, json_path):
@@ -54,7 +52,7 @@ def backfill_locations(args):
     conn = sqlite3.connect(db_path)
     rows = load_empty_location_rows(conn, args.limit)
 
-    print(f"Found {len(rows)} activities with empty location and route data.")
+    print(f"Found {len(rows)} activities needing administrative location data.")
     if not rows:
         conn.close()
         return
@@ -94,7 +92,7 @@ def backfill_locations(args):
                     language=args.language,
                     exactly_one=True,
                 )
-                location_text = str(location) if location else ""
+                location_text = structured_location(location)
                 cache[key] = location_text
                 time.sleep(args.sleep)
             except (GeocoderServiceError, GeocoderTimedOut) as exc:
@@ -108,13 +106,14 @@ def backfill_locations(args):
                 time.sleep(args.sleep)
                 continue
 
-        if not location_text:
+        if not location_text or needs_location(location_text):
             skipped += 1
-            print(f"[{index}/{len(rows)}] {run_id} skipped: empty geocode result")
+            print(
+                f"[{index}/{len(rows)}] {run_id} skipped: incomplete geocode result; existing location retained"
+            )
             continue
 
-        preview = location_text[:90].replace("\n", " ")
-        print(f"[{index}/{len(rows)}] {run_id} {start_date_local} {name}: {preview}")
+        print(f"[{index}/{len(rows)}] {run_id}: administrative location saved")
 
         if not args.dry_run:
             conn.execute(

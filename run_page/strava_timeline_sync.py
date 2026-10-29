@@ -421,21 +421,26 @@ def fetch_timeline(activity, client, cached=None):
             raise
         streams = {}  # A detailed activity exists but has no streams (e.g. manual).
     streams = normalize_streams(streams)
+    # Imported recordings can extend a few seconds beyond Strava's summary.
+    # Preserve the reported duration, but cover the actual recorded time axis.
+    times = streams.get("time", {}).get("data", [])
+    elapsed = detail["elapsed_time"]
+    if times and finite_number(elapsed):
+        elapsed = max(elapsed, times[-1])
+    item["stream_elapsed_time"] = elapsed
     item["metric"], item["bins"] = (
         ("pace", [])
         if group == "hike"
-        else activity_bins(
-            streams, detail["elapsed_time"], prefer_power=group == "ride"
-        )
+        else activity_bins(streams, elapsed, prefer_power=group == "ride")
     )
     item["timeline_checked_at"] = stamp
     if group == "run":
         item.update(
-            heartrate_bins=heartrate_bins(streams, detail["elapsed_time"]),
+            heartrate_bins=heartrate_bins(streams, elapsed),
             heartrate_checked_at=stamp,
         )
     if group == "ride" and item["metric"] == "power":
-        item["speed_bins"] = activity_bins(streams, detail["elapsed_time"])[1]
+        item["speed_bins"] = activity_bins(streams, elapsed)[1]
         item["speed_checked_at"] = stamp
     item["route_points"] = route_points(streams)
     item["route_checked_at"] = stamp
@@ -452,9 +457,7 @@ def fetch_timeline(activity, client, cached=None):
         times = streams.get("time", {}).get("data", [])
         altitude = streams.get("altitude", {}).get("data", [])
         if times and altitude:
-            bins = sample_bins(
-                times, altitude, elapsed=detail["elapsed_time"], metric="elevation"
-            )
+            bins = sample_bins(times, altitude, elapsed=elapsed, metric="elevation")
             if any(b[2] is not None for b in bins):
                 item["elevation_bins"] = bins
         item["elevation_fetched_at"] = stamp

@@ -1,3 +1,4 @@
+import { parseActivityLocation } from './activityLocation';
 import * as mapboxPolyline from '@mapbox/polyline';
 import gcoord from 'gcoord';
 import { WebMercatorViewport } from '@math.gl/web-mercator';
@@ -279,6 +280,12 @@ const locationForRun = (
 } => {
   if (locationCache.has(run.run_id)) {
     return locationCache.get(run.run_id)!;
+  }
+  const structured = parseActivityLocation(run.location_country);
+  if (structured) {
+    const result = { ...structured, coordinate: null };
+    locationCache.set(run.run_id, result);
+    return result;
   }
   let location = run.location_country;
   let [city, province, country] = ['', '', ''];

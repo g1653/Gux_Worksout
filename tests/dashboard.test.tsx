@@ -1,5 +1,41 @@
 import assert from 'node:assert/strict';
+import {
+  extractProvince,
+  parseActivityLocation,
+} from '../src/utils/activityLocation';
 import test from 'node:test';
+
+test('province extraction uses administrative components, not street names', () => {
+  assert.equal(
+    extractProvince('河北省路, 海淀区, 北京市, 100000, 中国'),
+    '北京市'
+  );
+  assert.equal(extractProvince('北京路, 广东省, 中国'), '广东省');
+  assert.equal(extractProvince('北京街, Singapore'), null);
+  assert.equal(extractProvince('青海'), '青海省');
+  assert.equal(extractProvince(null), null);
+  assert.equal(extractProvince('None'), null);
+  assert.equal(extractProvince('{broken'), null);
+  assert.equal(
+    extractProvince('{"country":"中国","province":"香港"}'),
+    '香港特别行政区'
+  );
+  assert.equal(
+    extractProvince("{'country':'中国','province':'广西','city':None}"),
+    '广西壮族自治区'
+  );
+  assert.equal(extractProvince('{"country":"美国","province":"北京市"}'), null);
+  assert.deepEqual(
+    parseActivityLocation(
+      '{"country":"中国","province":"北京","city":"海淀区"}'
+    ),
+    {
+      country: '中国',
+      province: '北京市',
+      city: '海淀区',
+    }
+  );
+});
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { Activity } from '../src/utils/utils';
 import {

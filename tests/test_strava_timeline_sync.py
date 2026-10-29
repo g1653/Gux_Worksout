@@ -80,6 +80,13 @@ class FakeClient(TimelineClient):
 
 
 class TimelineSyncTest(unittest.TestCase):
+    def test_stream_duration_can_exceed_reported_summary(self):
+        client = FakeClient({1: {"id": 1, "elapsed_time": 15, "moving_time": 15}})
+        item = fetch_timeline(activity(1), client, {})
+        self.assertEqual(item["elapsed_time"], 15)
+        self.assertEqual(item["stream_elapsed_time"], 20)
+        self.assertEqual(item["bins"][-1][1], 20)
+
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.root = Path(self.directory.name)

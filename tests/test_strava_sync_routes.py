@@ -89,6 +89,20 @@ class StravaSyncRouteTest(unittest.TestCase):
         enhance.assert_not_called()
         self.assertEqual(self.stored_polyline(), detailed)
 
+    def test_refresh_preserves_saved_location_when_strava_has_none(self):
+        self.add_existing_activity("")
+        saved = '{"country":"中国","province":"北京市","version":1}'
+        self.generator.session.get(Activity, 123).location_country = saved
+        self.generator.session.commit()
+        self.generator.client = SimpleNamespace(
+            get_activities=lambda **_kwargs: [incoming_activity("")]
+        )
+        with patch("generator.enhanced_polyline_for_activity", return_value=""):
+            self.generator.sync(force=False)
+        self.assertEqual(
+            self.generator.session.get(Activity, 123).location_country, saved
+        )
+
     def test_stream_failure_preserves_a_denser_existing_route(self):
         existing = line_polyline(800, 18.0)
         incoming = line_polyline(282, 50.0)
