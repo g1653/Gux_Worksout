@@ -1,3 +1,4 @@
+import { activityTypeLabel as typeLabel } from '../utils/activityTypes';
 import { memo, useMemo, useRef, useState } from 'react';
 import { exportCard } from '../utils/exportCard';
 import type { Activity, SportFilter } from '../types';
@@ -61,25 +62,6 @@ function getColorAll(typeRatio: number, displayType: string): string {
   const level = Math.ceil(Math.min(typeRatio, 1) * 4);
   const palette = TYPE_PALETTES[displayType] ?? TYPE_PALETTES.Training;
   return palette[level - 1] ?? palette[0];
-}
-
-function typeLabel(type: string, locale: string): string {
-  if (type === 'VirtualRide') return '虚拟骑行';
-  if (type === 'Trail Run' || type === 'TrailRun') return '越野跑';
-  const map: Record<string, { zh: string; en: string }> = {
-    Run: { zh: '跑步', en: 'Run' },
-    Ride: { zh: '骑行', en: 'Ride' },
-    Hike: { zh: '徒步', en: 'Hike' },
-    Training: { zh: '训练', en: 'Training' },
-    WeightTraining: { zh: '力量训练', en: 'Weight Training' },
-    Workout: { zh: '综合训练', en: 'Workout' },
-    StairStepper: { zh: '楼梯机', en: 'Stair Stepper' },
-    WaterSport: { zh: '水上运动', en: 'Water Sport' },
-    Flight: { zh: '飞行', en: 'Flight' },
-    RoadTrip: { zh: '自驾', en: 'Road Trip' },
-    Train: { zh: '铁路', en: 'Train' },
-  };
-  return map[type]?.[locale as 'zh' | 'en'] ?? type;
 }
 
 // Dominant display type for a day (by distance; Training is fallback)

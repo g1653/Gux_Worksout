@@ -281,7 +281,7 @@ export function SummaryPage({
               <option value="all">{zh ? '全部运动' : 'All sports'}</option>
               {sports.map((s) => (
                 <option key={s} value={s}>
-                  {activityTypeLabel(s)}
+                  {activityTypeLabel(s, locale)}
                 </option>
               ))}
             </select>

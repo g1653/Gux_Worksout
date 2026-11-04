@@ -13,6 +13,7 @@ def utc_date(value):
 
 def sport_family(kind):
     return {
+        "Soccer": "Workout",
         "Trail Run": "Run",
         "TrailRun": "Run",
         "VirtualRun": "Run",

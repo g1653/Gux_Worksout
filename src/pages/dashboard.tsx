@@ -43,16 +43,6 @@ const SummaryPage = lazy(() =>
     default: module.SummaryPage,
   }))
 );
-const TYPE_LABELS: Record<string, string> = {
-  Run: '跑步',
-  Ride: '骑行',
-  Hike: '徒步',
-  Workout: '训练',
-  Flight: '飞行',
-  RoadTrip: '自驾',
-  Train: '铁路',
-};
-
 const DashboardContent = () => {
   const { activities, years, thisYear } = useActivities();
   const { siteTitle, description, keywords, name, brand } = useSiteMetadata();
@@ -278,9 +268,7 @@ const DashboardContent = () => {
                     >
                       {type === 'all'
                         ? t('all')
-                        : locale === 'zh'
-                          ? TYPE_LABELS[type] || type
-                          : activityTypeLabel(type)}
+                        : activityTypeLabel(type, locale)}
                     </button>
                   ))}
                 </div>

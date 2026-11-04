@@ -22,6 +22,7 @@ from strava_auth import load_local_env
 from garmin_timelines import needs_timeline, save_timeline
 from backfill_temperatures import backfill_temperatures
 from activity_privacy import clear_virtual_location
+from activity_overrides import apply_activity_overrides
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / ".cache-garmin"
@@ -30,7 +31,7 @@ TYPE_MAP = {
     "open_water_swimming": "Swim",
     "treadmill_running": "Run",
     "trail_running": "Trail Run",
-    "soccer": "Workout",
+    "soccer": "Soccer",
     "other": "Workout",
     "yoga": "Workout",
     "driving_general": "RoadTrip",
@@ -111,6 +112,7 @@ def merge_summary(session, item):
         row.average_heartrate = item.get("averageHR")
         row.average_speed = item.get("averageSpeed")
         row.elevation_gain = item.get("elevationGain")
+    apply_activity_overrides(row)
     clear_virtual_location(row)
     return row, created
 

@@ -1,3 +1,4 @@
+import { activityTypeLabel } from '../utils/activityTypes';
 import { Fragment, useState, useMemo } from 'react';
 import type { Activity, SportFilter } from '../types';
 import { formatDuration } from '../hooks/useActivities';
@@ -37,6 +38,10 @@ function typeIcon(type: string): string {
     Ride: '🚴',
     Hike: '🥾',
     Workout: '🏋',
+    Soccer: '⚽',
+    VirtualRide: '🚴',
+    'Trail Run': '🏃',
+    TrailRun: '🏃',
     Flight: '✈',
     RoadTrip: '🚗',
     Train: '🚆',
@@ -288,7 +293,7 @@ export function ActivityLog({
                   </td>
                   <td className="py-3">
                     <span className="text-[var(--color-muted)]">
-                      {typeIcon(a.type)} {activityTypeLabel(a.type)}
+                      {typeIcon(a.type)} {activityTypeLabel(a.type, locale)}
                     </span>
                   </td>
                   <td className="py-3">{a.name || t('run')}</td>
@@ -370,4 +375,3 @@ export function ActivityLog({
     </div>
   );
 }
-import { activityTypeLabel } from '../utils/activityTypes';

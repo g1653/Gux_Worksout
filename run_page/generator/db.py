@@ -4,6 +4,7 @@ import string
 from activity_locations import structured_location
 from activity_matching import matching_activity
 from activity_privacy import clear_virtual_location
+from activity_overrides import apply_activity_overrides
 
 from config import TYPE_DICT
 from geopy.geocoders import options, Nominatim
@@ -254,6 +255,7 @@ def update_or_create_activity(session, run_activity):
                 or ""
             )
             activity.source = source
+        apply_activity_overrides(activity)
         clear_virtual_location(activity)
         if getattr(run_activity, "device_watts", None) is not None:
             measured = bool(run_activity.device_watts)

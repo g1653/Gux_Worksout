@@ -1009,3 +1009,18 @@ test('activity sorting keeps missing temperatures last, accepts zero and places 
     [4, 5]
   );
 });
+
+import { activityTypeLabel } from '../src/components/Dashboard/utils/activityTypes';
+test('activity labels follow the selected language in both directions', () => {
+  for (const [type, zh, en] of [
+    ['Soccer', '足球', 'Soccer'],
+    ['VirtualRide', '虚拟骑行', 'Virtual Ride'],
+    ['Trail Run', '越野跑', 'Trail Run'],
+    ['Workout', '综合训练', 'Workout'],
+    ['Swim', '游泳', 'Swim'],
+  ]) {
+    assert.equal(activityTypeLabel(type, 'zh'), zh);
+    assert.equal(activityTypeLabel(type, 'en'), en);
+    assert.equal(activityTypeLabel(type, 'zh'), zh);
+  }
+});
