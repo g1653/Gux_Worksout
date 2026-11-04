@@ -2,6 +2,7 @@ import datetime
 import random
 import string
 from activity_locations import structured_location
+from activity_matching import matching_activity
 
 from config import TYPE_DICT
 from geopy.geocoders import options, Nominatim
@@ -51,6 +52,7 @@ ACTIVITY_KEYS = [
 ]
 
 OPTIONAL_ACTIVITY_KEYS = [
+    "garmin_id",
     "temperature_min",
     "temperature_max",
     "temperature_source",
@@ -116,6 +118,8 @@ class Activity(Base):
     power_efforts_synced_at = Column(String)
     streak = None
     source = Column(String)
+    garmin_id = Column(Integer)
+    garmin_route_checked = Column(Boolean)
 
     def to_dict(self):
         out = {}
@@ -152,6 +156,15 @@ def update_or_create_activity(session, run_activity):
         )
         type = normalize_activity_type(run_activity.type)
         source = run_activity.source if hasattr(run_activity, "source") else "gpx"
+        if not activity and source == "strava":
+            activity = matching_activity(
+                session.query(Activity).filter_by(source="garmin").all(),
+                run_activity.start_date,
+                type,
+                _safe_float(run_activity.distance),
+            )
+            if activity:
+                activity.run_id = int(run_activity.id)
         incoming_name = _normalize_activity_name(getattr(run_activity, "name", ""))
 
         current_elevation_gain = 0.0  # default value
@@ -228,7 +241,10 @@ def update_or_create_activity(session, run_activity):
             activity.average_speed = _safe_float(run_activity.average_speed)
             activity.elevation_gain = current_elevation_gain
             activity.summary_polyline = (
-                run_activity.map and run_activity.map.summary_polyline or ""
+                run_activity.map
+                and run_activity.map.summary_polyline
+                or activity.summary_polyline
+                or ""
             )
             activity.source = source
         if getattr(run_activity, "device_watts", None) is not None:

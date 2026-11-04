@@ -1,0 +1,3 @@
+-r requirements-strava.txt
+garmin-connect-personal-api-python==1.0.0
+fitdecode>=0.11,<0.12
