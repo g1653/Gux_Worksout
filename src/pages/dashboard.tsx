@@ -27,6 +27,7 @@ import { CalendarWidget } from '@/components/Dashboard/components/CalendarWidget
 import { PersonalBest } from '@/components/Dashboard/components/PersonalBest';
 import {
   isRunning,
+  activityTypeLabel,
   orderActivityTypes,
 } from '@/components/Dashboard/utils/activityTypes';
 import '@/components/Dashboard/index.css';
@@ -54,13 +55,7 @@ const TYPE_LABELS: Record<string, string> = {
 
 const DashboardContent = () => {
   const { activities, years, thisYear } = useActivities();
-  const {
-    siteTitle,
-    description,
-    keywords,
-    name,
-    brand,
-  } = useSiteMetadata();
+  const { siteTitle, description, keywords, name, brand } = useSiteMetadata();
   const { theme, setTheme } = useTheme();
   const { locale, setLocale, t } = useLocale();
   const [params] = useSearchParams();
@@ -285,7 +280,7 @@ const DashboardContent = () => {
                         ? t('all')
                         : locale === 'zh'
                           ? TYPE_LABELS[type] || type
-                          : type}
+                          : activityTypeLabel(type)}
                     </button>
                   ))}
                 </div>

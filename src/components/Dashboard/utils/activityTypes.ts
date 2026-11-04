@@ -1,3 +1,11 @@
+const typeLabels: Record<string, string> = {
+  VirtualRide: '虚拟骑行',
+  'Trail Run': '越野跑',
+  TrailRun: '越野跑',
+};
+export const activityTypeLabel = (type: string): string =>
+  typeLabels[type] ?? type;
+
 export const isRunning = (type: string): boolean =>
   ['run', 'running', 'trailrun', 'virtualrun'].includes(
     type.replace(/[\s_-]/g, '').toLowerCase()

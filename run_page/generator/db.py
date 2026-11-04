@@ -3,6 +3,7 @@ import random
 import string
 from activity_locations import structured_location
 from activity_matching import matching_activity
+from activity_privacy import clear_virtual_location
 
 from config import TYPE_DICT
 from geopy.geocoders import options, Nominatim
@@ -185,7 +186,7 @@ def update_or_create_activity(session, run_activity):
             current_elevation_gain = float(run_activity.elevation_gain)
 
         if not activity:
-            start_point = run_activity.start_latlng
+            start_point = run_activity.start_latlng if type != "VirtualRide" else None
             location_country = getattr(run_activity, "location_country", "")
             # or China for #176 to fix
             if start_point and (not location_country or location_country == "China"):
@@ -253,6 +254,7 @@ def update_or_create_activity(session, run_activity):
                 or ""
             )
             activity.source = source
+        clear_virtual_location(activity)
         if getattr(run_activity, "device_watts", None) is not None:
             measured = bool(run_activity.device_watts)
             if measured != activity.device_watts:

@@ -188,6 +188,8 @@ def save_timeline(activity, content):
     item = timeline_from_streams(activity, fit_streams(content, activity.start_date))
     previous = read_json(STORE / f"{activity.run_id}.json", {})
     fill_missing_channels(item, previous)
+    if activity.type == "VirtualRide":
+        item.update(route_points=[], elevation_bins=[], climbs=[])
     atomic_json(STORE / f"{activity.run_id}.json", item)
     manifest = read_json(STORE / "index.json", {"version": 1, "activities": {}})
     manifest["activities"][str(activity.run_id)] = record_summary(

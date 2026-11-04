@@ -288,7 +288,7 @@ export function ActivityLog({
                   </td>
                   <td className="py-3">
                     <span className="text-[var(--color-muted)]">
-                      {typeIcon(a.type)} {a.type}
+                      {typeIcon(a.type)} {activityTypeLabel(a.type)}
                     </span>
                   </td>
                   <td className="py-3">{a.name || t('run')}</td>
@@ -370,3 +370,4 @@ export function ActivityLog({
     </div>
   );
 }
+import { activityTypeLabel } from '../utils/activityTypes';

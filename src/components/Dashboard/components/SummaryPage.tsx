@@ -12,7 +12,7 @@ import type { Activity } from '../types';
 import { useLocale } from '../hooks/useLocale';
 import { formatPace } from '../hooks/useActivities';
 import { formatSpeed, isActivityExcludedFromTotals } from '@/utils/utils';
-import { isRunning } from '../utils/activityTypes';
+import { isRunning, activityTypeLabel } from '../utils/activityTypes';
 import {
   groupSummary,
   summaryKey,
@@ -281,7 +281,7 @@ export function SummaryPage({
               <option value="all">{zh ? '全部运动' : 'All sports'}</option>
               {sports.map((s) => (
                 <option key={s} value={s}>
-                  {s}
+                  {activityTypeLabel(s)}
                 </option>
               ))}
             </select>

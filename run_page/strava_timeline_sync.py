@@ -381,6 +381,8 @@ def fetch_timeline(activity, client, cached=None):
             )
         if has_timeline_data(item):
             item.pop("unavailable", None)
+        if activity.get("type") == "VirtualRide":
+            item.update(route_points=[], elevation_bins=[], climbs=[])
         return item
     # Check the budget for the whole activity before starting the two requests.
     client.ensure_budget(2)
@@ -463,6 +465,8 @@ def fetch_timeline(activity, client, cached=None):
         item["elevation_fetched_at"] = stamp
     if not has_timeline_data(item):
         item["unavailable"] = "missing_streams"
+    if activity.get("type") == "VirtualRide":
+        item.update(route_points=[], elevation_bins=[], climbs=[])
     return item
 
 

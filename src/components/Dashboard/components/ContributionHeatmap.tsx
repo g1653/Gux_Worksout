@@ -64,6 +64,8 @@ function getColorAll(typeRatio: number, displayType: string): string {
 }
 
 function typeLabel(type: string, locale: string): string {
+  if (type === 'VirtualRide') return '虚拟骑行';
+  if (type === 'Trail Run' || type === 'TrailRun') return '越野跑';
   const map: Record<string, { zh: string; en: string }> = {
     Run: { zh: '跑步', en: 'Run' },
     Ride: { zh: '骑行', en: 'Ride' },

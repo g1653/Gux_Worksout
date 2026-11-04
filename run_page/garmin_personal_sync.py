@@ -21,6 +21,7 @@ from generator.db import Activity, init_db, normalize_activity_type
 from strava_auth import load_local_env
 from garmin_timelines import needs_timeline, save_timeline
 from backfill_temperatures import backfill_temperatures
+from activity_privacy import clear_virtual_location
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / ".cache-garmin"
@@ -110,6 +111,7 @@ def merge_summary(session, item):
         row.average_heartrate = item.get("averageHR")
         row.average_speed = item.get("averageSpeed")
         row.elevation_gain = item.get("elevationGain")
+    clear_virtual_location(row)
     return row, created
 
 
@@ -156,7 +158,7 @@ def sync(args):
                                 cache_file.write_bytes(client.download_activity(aid))
                                 time.sleep(0.3)
                             route = route_from_zip(cache_file.read_bytes())
-                            if route:
+                            if route and row.type != "VirtualRide":
                                 row.summary_polyline = route
                                 routes += 1
                             row.garmin_route_checked = True
