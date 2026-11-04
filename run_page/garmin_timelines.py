@@ -159,14 +159,35 @@ def timeline_from_streams(activity, streams):
 
 
 def needs_timeline(activity):
-    if activity.source != "garmin" or activity.garmin_invalid_date:
+    if not activity.garmin_id or activity.garmin_invalid_date:
         return False
     item = read_json(STORE / f"{activity.run_id}.json", {})
     return item.get("garmin_fit_version") != VERSION
 
 
+def fill_missing_channels(item, previous):
+    # Garmin owns recorded channels; Strava can fill a channel absent from FIT.
+    for key in ("bins", "heartrate_bins", "elevation_bins", "speed_bins"):
+        recorded = any(b[2] is not None for b in item.get(key, []))
+        if not recorded and previous.get(key):
+            item[key] = previous[key]
+            item["elapsed_time"] = max(
+                item["elapsed_time"], previous.get("elapsed_time", 0)
+            )
+            if key == "bins":
+                item["metric"] = previous.get("metric", "pace")
+    if not item["route_points"] and previous.get("route_points"):
+        item["route_points"] = previous["route_points"]
+    if previous.get("climbs"):
+        item["climbs"] = previous["climbs"]
+        item["climbs_source"] = previous.get("climbs_source", "strava_segments")
+    return item
+
+
 def save_timeline(activity, content):
     item = timeline_from_streams(activity, fit_streams(content, activity.start_date))
+    previous = read_json(STORE / f"{activity.run_id}.json", {})
+    fill_missing_channels(item, previous)
     atomic_json(STORE / f"{activity.run_id}.json", item)
     manifest = read_json(STORE / "index.json", {"version": 1, "activities": {}})
     manifest["activities"][str(activity.run_id)] = record_summary(

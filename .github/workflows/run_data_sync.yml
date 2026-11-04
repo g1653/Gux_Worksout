@@ -28,6 +28,7 @@ jobs:
             requirements-strava.txt
             requirements-garmin.txt
       - name: Install sync dependencies
+        id: install
         run: pip install -r requirements-garmin.txt
       - name: Sync activities and timelines
         id: sync
@@ -37,6 +38,8 @@ jobs:
           STRAVA_CLIENT_REFRESH_TOKEN: ${{ secrets.STRAVA_CLIENT_REFRESH_TOKEN }}
         run: python run_page/strava_sync.py
       - name: Sync Garmin Personal API activities
+        id: garmin
+        if: always() && steps.install.outcome == 'success'
         env:
           GARMIN_PERSONAL_API_KEY: ${{ secrets.GARMIN_PERSONAL_API_KEY }}
           GARMIN_REGION: CN
@@ -60,7 +63,7 @@ jobs:
             fi
           fi
       - name: Save updated workouts
-        if: always() && steps.sync.outcome == 'success'
+        if: always() && (steps.sync.outcome == 'success' || steps.garmin.outcome == 'success')
         run: |
           git add run_page/data.db src/static/activities.json
           if [ -d public/data ]; then git add public/data; fi

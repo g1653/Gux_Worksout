@@ -5,11 +5,28 @@ from pathlib import Path
 from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "run_page"))
-from garmin_timelines import timeline_from_streams
+from garmin_timelines import timeline_from_streams, fill_missing_channels
 from backfill_temperatures import parse_duration
 
 
 class GarminTimelineTests(unittest.TestCase):
+    def test_strava_only_fills_missing_channels(self):
+        pace = [[0, 10, 250, "running"]]
+        result = fill_missing_channels(
+            dict(bins=pace, elapsed_time=10, route_points=[], heartrate_bins=[]),
+            dict(
+                bins=[[0, 10, 300, "running"]],
+                heartrate_bins=[[0, 10, 150, "running"]],
+                elapsed_time=10,
+                climbs=[{"category": 1}],
+                route_points=[[0, 40, 116]],
+            ),
+        )
+        self.assertEqual(result["bins"], pace)
+        self.assertEqual(result["heartrate_bins"][0][2], 150)
+        self.assertEqual(result["route_points"], [[0, 40, 116]])
+        self.assertTrue(result["climbs"])
+
     def activity(self, kind="Run"):
         return SimpleNamespace(
             run_id=-123,

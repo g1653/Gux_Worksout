@@ -52,6 +52,7 @@ ACTIVITY_KEYS = [
 ]
 
 OPTIONAL_ACTIVITY_KEYS = [
+    "metrics_source",
     "garmin_id",
     "temperature_min",
     "temperature_max",
@@ -121,6 +122,7 @@ class Activity(Base):
     garmin_id = Column(Integer)
     garmin_route_checked = Column(Boolean)
     garmin_invalid_date = Column(Boolean)
+    metrics_source = Column(String)
 
     def to_dict(self):
         out = {}
@@ -225,6 +227,9 @@ def update_or_create_activity(session, run_activity):
             )
             session.add(activity)
             created = True
+        elif source == "strava" and activity.metrics_source == "garmin":
+            # Keep the Strava identity/official efforts, without changing Garmin metrics.
+            activity.source = source
         else:
             current_name = _normalize_activity_name(activity.name)
             if current_name != incoming_name:

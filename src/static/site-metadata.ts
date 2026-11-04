@@ -8,7 +8,7 @@ const data = {
   stravaUrl: 'https://www.strava.com/athletes/157940104',
   logo: 'https://avatars.githubusercontent.com/u/238671315?v=4',
   description:
-    'Guxiang 的运动记录：跑步、骑行、徒步与训练，通过 Strava 持续同步。',
-  keywords: 'Guxiang, 运动, 跑步, 骑行, 徒步, Strava, workouts',
+    'Guxiang 的运动记录：跑步、骑行、徒步与训练，以 Garmin 数据为主、Strava 补充，每天更新。',
+  keywords: 'Guxiang, 运动, 跑步, 骑行, 徒步, Garmin, Strava, workouts',
 };
 export default data;

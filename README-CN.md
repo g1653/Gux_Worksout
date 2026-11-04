@@ -52,7 +52,9 @@ Garmin Personal API 也在此工作流中同步，密钥放入 `GARMIN_PERSONAL_
 
 使用 [Garmin 官方 Personal API 客户端](https://github.com/garmin/connect-personal-api-python) 自动换取访问令牌，令牌和原始 FIT 文件仅保存在被 Git 忽略的 `.cache-garmin/`。个人密钥到期后，需在 Garmin Connect 重新生成并更新 `.env` 和 GitHub Secret。
 
-跨来源去重要求类型兼容、开始时间相差不超过 90 秒、距离差不超过 5%（短活动允许 100 米），且只有一个匹配项。重复活动保留 Strava 指标、路线和地点，并记录 `garmin_id`；Garmin 独有活动使用负数内部 ID。以后 Strava 补到同一活动时，会合并为 Strava ID 并保留 Garmin 关联。驾驶归为交通，事故检测事件不作为独立运动计数。
+主页使用 **Garmin 为主、Strava 补充**：同一活动的名称、类型、日期、距离、时长、心率和爬升以中国区 Garmin 为准，记录 `metrics_source=garmin`；路线和时间条优先使用原始 FIT。Strava 保留活动身份关联、官方最佳成绩及已有爬坡分段，独有活动也会收录。后续 Strava 刷新不会覆盖 Garmin 指标。FIT 无路线时保留已有可用路线，地点和天气信息持续保存。
+
+跨来源去重要求类型兼容、开始时间相差不超过 90 秒、距离差不超过 5%（短活动允许 100 米），且只有一个匹配项。重复活动记录 `garmin_id`；Garmin 独有活动使用负数内部 ID。以后 Strava 补到同一活动时，会合并为 Strava ID 并保留 Garmin 数据。`source` 表示活动身份来源，`metrics_source` 表示指标来源，两者可能不同。驾驶归为交通，事故检测事件不作为独立运动计数。
 
 Garmin 同步读取全部活动分页，补齐缺失路线的 FIT 文件，并反查保存省份。已完成的 FIT 查询记录在数据库中，避免反复下载无轨迹活动。失败后可重试，已保存的进度不会丢失。同步范围是运动活动，不向主页发布睡眠、体重等健康数据。
 
@@ -62,7 +64,7 @@ Garmin FIT 中记录的速度、心率、功率和海拔会转换为主页时间
 
 仓库 Secrets：`STRAVA_CLIENT_ID`、`STRAVA_CLIENT_SECRET`、`STRAVA_CLIENT_REFRESH_TOKEN`，以及已保存的 `STRAVA_ACCESS_TOKEN`。自动同步使用刷新令牌取得有效的访问令牌。
 
-`Sync Strava` 工作流在 `main` 分支每天北京时间 00:00 运行，也可在 Actions 中手动运行。更新数据会提交回仓库。GitHub 的计划任务可能延迟，长期无活动的公开仓库可能暂停计划任务。
+`Sync Strava and Garmin` 工作流在 `main` 分支每天北京时间 00:00 运行，也可在 Actions 中手动运行。先读取 Strava 补充数据，再读取 Garmin 并更新主数据；Strava 拉取失败仍继续 Garmin，同步成功的数据会提交回仓库，失败来源仍会在任务中报错。GitHub 的计划任务可能延迟，长期无活动的公开仓库可能暂停计划任务。
 
 Strava 刷新令牌会轮换。工作流将最新令牌以 AES-GCM 加密保存在 `.github/strava-token.enc`，密钥来自 Actions Secret 中的客户端密钥；仓库中没有明文凭据，也不需要额外的 GitHub 管理令牌。重新授权并更新初始刷新令牌 Secret 后，会自动开始新的令牌链。同步失败时也会先保留已轮换的加密令牌。
 

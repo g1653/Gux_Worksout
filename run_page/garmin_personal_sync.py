@@ -94,7 +94,8 @@ def merge_summary(session, item):
         row = Activity(run_id=-aid, source="garmin", garmin_id=aid)
         session.add(row)
     row.garmin_id = aid
-    if row.source == "garmin":
+    if not invalid_date or row.source == "garmin":
+        row.metrics_source = "garmin"
         row.garmin_invalid_date = invalid_date
         moving = item.get("movingDuration") or item.get("duration") or 0
         row.name = item.get("activityName") or kind

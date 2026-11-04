@@ -73,7 +73,7 @@ class GarminTests(unittest.TestCase):
             elapsedDuration=3700,
         )
 
-    def test_merge_preserves_strava_metrics_route_and_location(self):
+    def test_garmin_metrics_win_while_strava_identity_and_location_survive(self):
         row = Activity(
             run_id=123,
             source="strava",
@@ -89,7 +89,7 @@ class GarminTests(unittest.TestCase):
         result, created = merge_summary(self.session, self.item)
         self.assertFalse(created)
         self.assertEqual(
-            (result.run_id, result.garmin_id, result.distance), (123, 42, 11100)
+            (result.run_id, result.garmin_id, result.distance), (123, 42, 11000)
         )
         self.assertEqual(
             (result.summary_polyline, result.location_country),
@@ -126,6 +126,12 @@ class GarminTests(unittest.TestCase):
         result = self.session.get(Activity, 456)
         self.assertEqual(result.garmin_id, 42)
         self.assertEqual(result.summary_polyline, "preserved")
+        self.assertEqual(result.distance, 11000)
+        self.assertEqual(result.name, "Run")
+        self.assertEqual(result.metrics_source, "garmin")
+        self.assertEqual(result.source, "strava")
+        update_or_create_activity(self.session, incoming)
+        self.assertEqual(result.distance, 11000)
 
     def test_ambiguous_or_different_workout_is_not_merged(self):
         row = SimpleNamespace(
