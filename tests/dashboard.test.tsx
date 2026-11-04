@@ -70,7 +70,14 @@ import {
   type ActivitySortKey,
   type SortDirection,
 } from '../src/components/Dashboard/utils/activitySort';
-import { formatTemperatureRange } from '../src/utils/utils';
+import { formatTemperatureRange, formatPace } from '../src/utils/utils';
+test('missing and near-zero Garmin speed does not display infinite pace', () => {
+  assert.equal(formatPace(0), '--');
+  assert.equal(formatPace(Number.MIN_VALUE), '--');
+  assert.equal(formatPace(NaN), '--');
+  assert.equal(formatPace(null as unknown as number), '--');
+  assert.equal(formatPace(2.5), `6'40"`);
+});
 import {
   bandDurations,
   canShowElevation,

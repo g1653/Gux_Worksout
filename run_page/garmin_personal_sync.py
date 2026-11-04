@@ -68,8 +68,16 @@ def route_from_zip(content):
 def merge_summary(session, item):
     aid = int(item["activityId"])
     kind = activity_type(item)
+    invalid_date = False
+    try:
+        invalid_date = any(
+            dt.datetime.fromisoformat(item[field]).year <= 1970
+            for field in ("startTimeGMT", "startTimeLocal")
+        )
+    except (ValueError, TypeError, KeyError):
+        invalid_date = True
     row = session.query(Activity).filter_by(garmin_id=aid).one_or_none()
-    if row is None:
+    if row is None and not invalid_date:
         row = matching_activity(
             session.query(Activity)
             .filter_by(source="strava")
@@ -85,6 +93,7 @@ def merge_summary(session, item):
         session.add(row)
     row.garmin_id = aid
     if row.source == "garmin":
+        row.garmin_invalid_date = invalid_date
         moving = item.get("movingDuration") or item.get("duration") or 0
         row.name = item.get("activityName") or kind
         row.type = kind

@@ -79,7 +79,7 @@ const DashboardContent = () => {
   const year = years.includes(params.get('year') || '')
     ? Number(params.get('year'))
     : null;
-  const selectedId = /^#run_\d+$/.test(location.hash)
+  const selectedId = /^#run_-?\d+$/.test(location.hash)
     ? Number(location.hash.slice(5))
     : null;
   const selected = activities.find((a) => a.run_id === selectedId) || null;

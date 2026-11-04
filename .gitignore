@@ -37,6 +37,7 @@ route.svg
 *.db-journal
 *.db-wal
 *.db-shm
+/src/static/activities.json.tmp
 
 # Timeline batch coordination / atomic write files
 /public/data/activity-timelines/.sync.lock

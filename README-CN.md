@@ -56,6 +56,8 @@ Garmin Personal API 也在此工作流中同步，密钥放入 `GARMIN_PERSONAL_
 
 Garmin 同步读取全部活动分页，补齐缺失路线的 FIT 文件，并反查保存省份。已完成的 FIT 查询记录在数据库中，避免反复下载无轨迹活动。失败后可重试，已保存的进度不会丢失。同步范围是运动活动，不向主页发布睡眠、体重等健康数据。
 
+缺失日期或使用 1970 年占位日期的 Garmin 记录会保留在数据库中并标记 `garmin_invalid_date`，暂不导出到主页，以免污染年度统计；在 Garmin 修正日期后再次同步即可恢复显示。
+
 仓库 Secrets：`STRAVA_CLIENT_ID`、`STRAVA_CLIENT_SECRET`、`STRAVA_CLIENT_REFRESH_TOKEN`，以及已保存的 `STRAVA_ACCESS_TOKEN`。自动同步使用刷新令牌取得有效的访问令牌。
 
 `Sync Strava` 工作流在 `main` 分支每天北京时间 00:00 运行，也可在 Actions 中手动运行。更新数据会提交回仓库。GitHub 的计划任务可能延迟，长期无活动的公开仓库可能暂停计划任务。

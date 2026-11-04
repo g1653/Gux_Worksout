@@ -120,6 +120,7 @@ class Activity(Base):
     source = Column(String)
     garmin_id = Column(Integer)
     garmin_route_checked = Column(Boolean)
+    garmin_invalid_date = Column(Boolean)
 
     def to_dict(self):
         out = {}

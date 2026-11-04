@@ -15,6 +15,20 @@ from generator.db import Activity, init_db, update_or_create_activity
 
 
 class GarminTests(unittest.TestCase):
+    def test_invalid_epoch_date_is_preserved_but_excluded_from_dashboard(self):
+        from generator import Generator
+
+        self.item.update(
+            startTimeGMT="1970-01-01 00:00:00", startTimeLocal="1970-01-01 08:00:00"
+        )
+        row, _ = merge_summary(self.session, self.item)
+        self.session.commit()
+        self.assertTrue(row.garmin_invalid_date)
+        generator = Generator.__new__(Generator)
+        generator.session = self.session
+        self.assertEqual(generator.loadForMapping(), [])
+        self.assertEqual(self.session.query(Activity).count(), 1)
+
     def test_fit_coordinates_are_converted_without_inventing_indoor_routes(self):
         class Record:
             name = "record"

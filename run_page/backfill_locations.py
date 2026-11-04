@@ -41,9 +41,16 @@ def load_empty_location_rows(conn, limit):
 
 def rebuild_activities_json(db_path, json_path):
     generator = Generator(str(db_path))
-    activities_list = generator.loadForMapping()
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(activities_list, f, indent=0)
+    try:
+        activities_list = generator.loadForMapping()
+        path = Path(json_path)
+        temporary = path.with_suffix(path.suffix + ".tmp")
+        temporary.write_text(json.dumps(activities_list, indent=0), encoding="utf-8")
+        temporary.replace(path)
+    finally:
+        engine = generator.session.get_bind()
+        generator.session.close()
+        engine.dispose()
 
 
 def backfill_locations(args):
