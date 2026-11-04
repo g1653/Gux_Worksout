@@ -60,8 +60,6 @@ const DashboardContent = () => {
     keywords,
     name,
     brand,
-    githubUrl,
-    stravaUrl,
   } = useSiteMetadata();
   const { theme, setTheme } = useTheme();
   const { locale, setLocale, t } = useLocale();
@@ -223,16 +221,6 @@ const DashboardContent = () => {
             >
               {locale === 'zh' ? 'EN' : '中'}
             </button>
-            <a
-              href={githubUrl}
-              aria-label="GitHub"
-              className="text-sm text-[var(--color-muted)]"
-            >
-              GitHub
-            </a>
-            <a href={stravaUrl} className="text-sm text-[var(--color-muted)]">
-              Strava
-            </a>
           </nav>
         </div>
       </header>

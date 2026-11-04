@@ -56,6 +56,8 @@ Garmin Personal API 也在此工作流中同步，密钥放入 `GARMIN_PERSONAL_
 
 Garmin 同步读取全部活动分页，补齐缺失路线的 FIT 文件，并反查保存省份。已完成的 FIT 查询记录在数据库中，避免反复下载无轨迹活动。失败后可重试，已保存的进度不会丢失。同步范围是运动活动，不向主页发布睡眠、体重等健康数据。
 
+Garmin FIT 中记录的速度、心率、功率和海拔会转换为主页时间条，保留暂停和缺失区间；原文件没有的传感器数据不会补造。每次 Garmin 同步后也会补齐符合条件的户外活动天气，兼容小数秒时长，近期活动使用 Open-Meteo 的近期天气接口。天气查询发送起点坐标与日期；室内或缺少定位的活动可能没有天气。
+
 缺失日期或使用 1970 年占位日期的 Garmin 记录会保留在数据库中并标记 `garmin_invalid_date`，暂不导出到主页，以免污染年度统计；在 Garmin 修正日期后再次同步即可恢复显示。
 
 仓库 Secrets：`STRAVA_CLIENT_ID`、`STRAVA_CLIENT_SECRET`、`STRAVA_CLIENT_REFRESH_TOKEN`，以及已保存的 `STRAVA_ACCESS_TOKEN`。自动同步使用刷新令牌取得有效的访问令牌。

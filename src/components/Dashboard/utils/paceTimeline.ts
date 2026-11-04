@@ -52,6 +52,7 @@ export function climbSpans(
 }
 
 export interface PaceRun {
+  source?: 'garmin' | 'strava';
   id: number;
   name: string;
   start_date_local: string;
@@ -152,7 +153,7 @@ export const HEART_RATE_BANDS = [
 
 export function heartRateTimeline(run: PaceRun): PaceRun | null {
   if (
-    run.sport_group !== 'run' ||
+    (run.sport_group !== 'run' && run.source !== 'garmin') ||
     !run.heartrate_bins?.some(
       (bin) => paceBand(bin, 'heartrate') !== UNKNOWN_BAND
     )

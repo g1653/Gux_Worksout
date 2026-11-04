@@ -36,7 +36,7 @@ def parse_duration(value):
         days_part, time_part = value.split(", ", 1)
         days = int(days_part.split(" ", 1)[0])
 
-    hours, minutes, seconds = [int(part) for part in time_part.split(":")]
+    hours, minutes, seconds = [float(part) for part in time_part.split(":")]
     return dt.timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
 
 
@@ -77,7 +77,12 @@ def hourly_weather(latitude, longitude, start_date, end_date):
         "end_date": end_date.isoformat(),
         "timezone": "auto",
     }
-    url = f"{OPEN_METEO_URL}?{urlencode(params)}"
+    # Archive data can lag several days; recent activities use forecast history.
+    today = dt.datetime.now(dt.timezone.utc).date()
+    endpoint = OPEN_METEO_URL
+    if start_date >= today - dt.timedelta(days=5):
+        endpoint = "https://api.open-meteo.com/v1/forecast"
+    url = f"{endpoint}?{urlencode(params)}"
     last_error = None
     for attempt in range(3):
         try:

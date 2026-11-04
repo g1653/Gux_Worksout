@@ -175,6 +175,14 @@ test('running heart rate is conditional, uses BPM and shares the time readout', 
     null
   );
   const heart = heartRateTimeline({ ...run, heartrate_bins })!;
+  assert.ok(
+    heartRateTimeline({
+      ...run,
+      source: 'garmin',
+      sport_group: 'ride',
+      heartrate_bins,
+    })
+  );
   const html = renderToStaticMarkup(
     <PaceTimeline run={heart} cursor={15} showReadout={false} />
   );

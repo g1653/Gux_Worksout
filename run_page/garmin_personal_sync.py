@@ -19,6 +19,8 @@ from backfill_locations import backfill_locations, rebuild_activities_json
 from config import JSON_FILE, SQL_FILE
 from generator.db import Activity, init_db, normalize_activity_type
 from strava_auth import load_local_env
+from garmin_timelines import needs_timeline, save_timeline
+from backfill_temperatures import backfill_temperatures
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / ".cache-garmin"
@@ -145,7 +147,9 @@ def sync(args):
                     linked += row.source == "strava"
                     aid = int(item["activityId"])
                     cache_file = CACHE / f"{aid}.zip"
-                    if not row.summary_polyline and not row.garmin_route_checked:
+                    if (
+                        not row.summary_polyline and not row.garmin_route_checked
+                    ) or needs_timeline(row):
                         try:
                             if not cache_file.exists():
                                 cache_file.write_bytes(client.download_activity(aid))
@@ -155,6 +159,8 @@ def sync(args):
                                 row.summary_polyline = route
                                 routes += 1
                             row.garmin_route_checked = True
+                            if needs_timeline(row):
+                                save_timeline(row, cache_file.read_bytes())
                         except HttpError as error:
                             if error.status_code in (401, 403, 429):
                                 raise
@@ -204,6 +210,7 @@ def sync(args):
                 no_json=False,
             )
         )
+    backfill_temperatures(db_path=SQL_FILE, json_path=JSON_FILE, limit=100)
     print(
         json.dumps(
             dict(
