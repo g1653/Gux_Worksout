@@ -6107,5 +6107,64 @@
 "best_efforts_version": 2,
 "device_watts": true,
 "streak": 1
+},
+{
+"run_id": 20930001917,
+"name": "\u5348\u540e\u8dd1\u6b65",
+"distance": 1016.8,
+"moving_time": "0:03:57",
+"type": "Run",
+"start_date": "2026-11-10 05:26:30+00:00",
+"start_date_local": "2026-11-10 13:26:30",
+"location_country": "{\"country\": \"\u4e2d\u56fd\", \"country_code\": \"cn\", \"province\": \"\u5317\u4eac\u5e02\", \"city\": \"\u5927\u5174\u533a\", \"source\": \"nominatim\", \"province_code\": \"CN-BJ\", \"version\": 1}",
+"summary_polyline": "glrqFowudUC?r@WPe@B[@WKc@MQIGg@KQ@k@AGB}@Ag@DOHQVI\\?VBVLZRVLHV@`B?^@VANENINUHYB_@E_@KUQQME_@Em@Bo@CaABSLOPIZAZLn@HLJJRHN@hC@XCTMJMJWDc@C[KWMQSIe@AaCAO@",
+"average_heartrate": 180.3,
+"average_speed": 4.29,
+"elevation_gain": 4.0,
+"source": "strava",
+"temperature_min": 11.8,
+"temperature_max": 11.8,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
+"best_efforts": [
+{
+"name": "400m",
+"distance": 400.0,
+"elapsed_time": 80
+},
+{
+"name": "1K",
+"distance": 1000.0,
+"elapsed_time": 227
+}
+],
+"best_efforts_synced_at": "2026-11-10T21:38:05.783542+00:00",
+"best_efforts_version": 2,
+"device_watts": true,
+"streak": 1
+},
+{
+"run_id": -660659022,
+"name": "\u4f53\u6d4b1000",
+"distance": 1008.3300170898438,
+"moving_time": "0:03:49",
+"type": "Run",
+"start_date": "2026-11-10 05:28:52",
+"start_date_local": "2026-11-10 13:28:52",
+"location_country": "{\"country\": \"\u4e2d\u56fd\", \"country_code\": \"cn\", \"province\": \"\u5317\u4eac\u5e02\", \"city\": \"\u5927\u5174\u533a\", \"source\": \"nominatim\", \"province_code\": \"CN-BJ\", \"version\": 1}",
+"summary_polyline": "glrqFowudU????A?A?BADEJCNEJGFIDOBKBM@K@KAKAMCKEIEIGIGGGAICKAIAI?I@GAI?G?G?I?E@I?G?I?GAI?G@GAG@G@G?G@G@G@GDGFCFEHCHCHAHAJ?H@JBJ@HDJBFDHDDFFFBDBH@F@F?FAF@F?F?FAF@F?F?F?F?HAD?H@F?F?D?H?F?D?@ADAFAFEFEFEDGBGBGBG@I@I@I?KAIAIAICGCGCGEEECGEECGAGAGCG?G?G@GAG@E?G?G?G?G?EAG@GAG?G?E?E?G@GAG?G@E?G@GBGBEDEDCDCDCHCFAHAF?F?J?H@FBH@HBFDFBFFBDDDDFBD@F@D?F?D?F?F?D?F?D?D?F?F@FAD?F?F?D?F@F?D?F?FAD?FADADCFCDEFEDGBGBGBG@G@G?G?I?IAGAIAGCGCGCEEEEEECECGAEAGAE?I?G?C?G?G?E?G?G?E?G?E?G?G?E?G?E?G?G?G?G?G?E@",
+"average_heartrate": 180.68995633187774,
+"average_speed": 4.403187847553903,
+"elevation_gain": 6.799999237060547,
+"temperature_min": 11.8,
+"temperature_max": 11.8,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
+"source": "garmin",
+"metrics_source": "garmin",
+"garmin_id": 660659022,
+"streak": 1
 }
 ]
