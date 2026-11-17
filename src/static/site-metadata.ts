@@ -3,7 +3,7 @@ const data = {
   name: 'Guxiang',
   brand: 'GUXIANG',
   siteTitle: 'Guxiang 的运动主页',
-  siteUrl: 'https://g1653.github.io/Gux_Worksout/',
+  siteUrl: 'https://gux-worksout.surge.sh/',
   githubUrl: 'https://github.com/g1653/Gux_Worksout',
   stravaUrl: 'https://www.strava.com/athletes/157940104',
   logo: 'https://avatars.githubusercontent.com/u/238671315?v=4',

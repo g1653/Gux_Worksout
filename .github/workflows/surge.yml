@@ -1,0 +1,57 @@
+name: Publish Surge
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/prepare-surge.mjs'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'vite.config.ts'
+      - 'index.html'
+      - '.github/workflows/surge.yml'
+  # Commits made with GITHUB_TOKEN do not trigger a push workflow.
+  workflow_run:
+    workflows: ['Sync Strava and Garmin']
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: surge-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.9.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: node scripts/prepare-surge.mjs
+      - name: Deploy website
+        env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+        run: |
+          if [ -z "$SURGE_LOGIN" ] || [ -z "$SURGE_TOKEN" ]; then
+            echo 'Configure SURGE_LOGIN and SURGE_TOKEN in repository Actions secrets.'
+            exit 1
+          fi
+          pnpm dlx surge@0.57.1 ./dist gux-worksout.surge.sh
