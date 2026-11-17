@@ -1,3 +1,4 @@
+import { sportDistances, sportPalettes } from '../utils/sportColors';
 import { useMemo, useState } from 'react';
 import {
   Bar,
@@ -17,7 +18,7 @@ import {
   groupSummary,
   summaryKey,
   summarize,
-  summaryChart,
+  summarySportChart,
   type SummaryPeriod,
 } from '../utils/summary';
 
@@ -49,7 +50,8 @@ function SummaryCard({
         ? `${formatPace(speed)} /km`
         : formatSpeed(speed)
       : '—';
-  const chart = summaryChart(activities, period, label);
+  const chart = summarySportChart(activities, period, label);
+  const sports = sportDistances(activities);
   const metrics = [
     [zh ? '活动次数' : 'Activities', String(stats.count)],
     [
@@ -120,12 +122,21 @@ function SummaryCard({
               : 'All time · Life'
             : label}
         </h2>
-        <p className="text-2xl font-semibold tabular-nums text-[var(--color-accent)]">
-          {number(stats.distance / 1000)}{' '}
-          <span className="text-sm font-normal text-[var(--color-muted)]">
-            km
-          </span>
-        </p>
+        <div className="flex flex-wrap justify-end gap-x-5 gap-y-2">
+          {sports.map(({ type, distance }) => (
+            <p
+              key={type}
+              className="text-right tabular-nums"
+              style={{ color: sportPalettes[type][2] }}
+            >
+              <span className="mr-2 text-xs">
+                {activityTypeLabel(type, zh ? 'zh' : 'en')}
+              </span>
+              <strong className="text-xl">{number(distance / 1000)}</strong>
+              <span className="ml-1 text-xs">km</span>
+            </p>
+          ))}
+        </div>
       </div>
       <dl className="my-5 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">
         {metrics.map(([name, value]) => (
@@ -137,7 +148,7 @@ function SummaryCard({
       </dl>
       <div
         role="img"
-        aria-label={`${label}: ${chart.map((d) => `${d.label}: ${d.km} km`).join(', ')}`}
+        aria-label={`${label}: ${chart.map((d) => `${d.label}: ${sports.map(({ type }) => `${activityTypeLabel(type, zh ? 'zh' : 'en')} ${d[type]} km`).join(', ')}`).join('; ')}`}
       >
         <div className="h-40 w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%">
@@ -171,20 +182,35 @@ function SummaryCard({
                   color: 'var(--color-text)',
                 }}
               />
-              <Bar
-                dataKey="km"
-                name="km"
-                fill="var(--color-accent)"
-                radius={[3, 3, 0, 0]}
-                maxBarSize={32}
-                isAnimationActive={false}
-              />
+              {sports.map(({ type }) => (
+                <Bar
+                  key={type}
+                  dataKey={type}
+                  name={activityTypeLabel(type, zh ? 'zh' : 'en')}
+                  fill={sportPalettes[type][2]}
+                  stackId="sports"
+                  maxBarSize={32}
+                  isAnimationActive={false}
+                  unit=" km"
+                />
+              ))}
             </BarChart>
           </ResponsiveContainer>
         </div>
         <p className="mt-1 text-right text-xs text-[var(--color-muted)]">
           {chartUnit} · km
         </p>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-4 text-xs text-[var(--color-muted)]">
+        {sports.map(({ type }) => (
+          <span key={type} className="flex items-center gap-1.5">
+            <span
+              className="h-2 w-2 rounded-full"
+              style={{ backgroundColor: sportPalettes[type][2] }}
+            />
+            {activityTypeLabel(type, zh ? 'zh' : 'en')}
+          </span>
+        ))}
       </div>
       {period === 'day' && (
         <div className="mt-4 space-y-2 border-t border-[var(--color-border)] pt-4">

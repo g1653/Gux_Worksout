@@ -1,3 +1,9 @@
+import {
+  sportGroup as toDisplayType,
+  sportPalettes as TYPE_PALETTES,
+  sportDistances,
+  segmentBackground,
+} from '../utils/sportColors';
 import { activityTypeLabel as typeLabel } from '../utils/activityTypes';
 import { memo, useMemo, useRef, useState } from 'react';
 import { exportCard } from '../utils/exportCard';
@@ -23,21 +29,6 @@ interface HeatmapProps {
   onSelectActivity?: (a: Activity | null) => void;
 }
 
-// Map any activity type to the 4 display categories
-function toDisplayType(type: string): 'Run' | 'Ride' | 'Hike' | 'Training' {
-  if (type === 'Run') return 'Run';
-  if (type === 'Ride') return 'Ride';
-  if (type === 'Hike') return 'Hike';
-  return 'Training';
-}
-
-const TYPE_PALETTES: Record<string, string[]> = {
-  Run: ['#fed7aa', '#fb923c', '#f97316', '#ea580c'],
-  Ride: ['#bfdbfe', '#60a5fa', '#3b82f6', '#2563eb'],
-  Hike: ['#bbf7d0', '#4ade80', '#22c55e', '#16a34a'],
-  Training: ['#fce7f3', '#f9a8d4', '#ec4899', '#db2777'],
-};
-
 // Color for single-filter modes (intensity by global max)
 function getColor(distance: number, max: number, filter: SportFilter): string {
   if (distance === 0) return 'var(--color-border)';
@@ -52,22 +43,13 @@ function getColor(distance: number, max: number, filter: SportFilter): string {
     RoadTrip: ['#fef3c7', '#fcd34d', '#f59e0b', '#d97706'],
     Train: ['#cffafe', '#67e8f9', '#06b6d4', '#0891b2'],
   };
-  const palette = colors[filter] ?? colors.all;
-  return palette[level - 1] ?? palette[0];
-}
-
-// Color for "all" mode: ratio is per-type (dayDist / typeMax)
-function getColorAll(typeRatio: number, displayType: string): string {
-  if (typeRatio === 0) return 'var(--color-border)';
-  const level = Math.ceil(Math.min(typeRatio, 1) * 4);
-  const palette = TYPE_PALETTES[displayType] ?? TYPE_PALETTES.Training;
+  const palette =
+    colors[filter] ?? TYPE_PALETTES[toDisplayType(filter)] ?? colors.all;
   return palette[level - 1] ?? palette[0];
 }
 
 // Dominant display type for a day (by distance; Training is fallback)
-function dominantDisplayType(
-  acts: Activity[]
-): 'Run' | 'Ride' | 'Hike' | 'Training' {
+function dominantDisplayType(acts: Activity[]): string {
   if (acts.length === 0) return 'Training';
   const sorted = [...acts].sort((a, b) => b.distance - a.distance);
   return toDisplayType(sorted[0].type);
@@ -122,14 +104,24 @@ export function buildYearGrid(
     Hike: 1,
     Training: 1,
   };
+  const dayTypeValues = (dayActs: Activity[]) =>
+    sportDistances(dayActs).map(({ type, distance }) => ({
+      type,
+      value:
+        type === 'Training'
+          ? Math.max(
+              1,
+              dayActs
+                .filter((a) => toDisplayType(a.type) === type)
+                .reduce((sum, a) => sum + parseMovingTime(a.moving_time), 0)
+            )
+          : Math.max(1, distance),
+    }));
   if (isAll) {
-    dayActivitiesMap.forEach((dayActs, day) => {
-      const domType = dominantDisplayType(dayActs);
-      const value =
-        domType === 'Training'
-          ? dayTimeMap.get(day) || 0
-          : dayActs.reduce((s, a) => s + (a.distance > 0 ? a.distance : 0), 0);
-      if (value > typeMaxMap[domType]) typeMaxMap[domType] = value;
+    dayActivitiesMap.forEach((dayActs) => {
+      dayTypeValues(dayActs).forEach(({ type, value }) => {
+        typeMaxMap[type] = Math.max(typeMaxMap[type] ?? 1, value);
+      });
     });
   }
 
@@ -144,6 +136,7 @@ export function buildYearGrid(
     activities: Activity[];
     domType: string;
     typeRatio: number;
+    segments: { type: string; ratio: number }[];
   }[][] = [];
   const monthPositions: { label: string; weekIdx: number }[] = [];
   let currentMonth = -1;
@@ -172,6 +165,10 @@ export function buildYearGrid(
       activities: dayActs,
       domType,
       typeRatio,
+      segments: dayTypeValues(dayActs).map(({ type, value }) => ({
+        type,
+        ratio: value / (typeMaxMap[type] ?? 1),
+      })),
     });
     if (date.getMonth() !== currentMonth) {
       currentMonth = date.getMonth();
@@ -270,9 +267,7 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
         )
         .map((a) => toDisplayType(a.type))
     );
-    return (['Run', 'Ride', 'Hike', 'Training'] as const).filter((t) =>
-      types.has(t)
-    );
+    return Object.keys(TYPE_PALETTES).filter((t) => types.has(t));
   }, [activities, selectedYear, isAll]);
 
   // Gym: monthly session breakdown
@@ -595,17 +590,29 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
                       day.distance === 0
                         ? 'var(--color-border)'
                         : isAll
-                          ? getColorAll(day.typeRatio, day.domType)
+                          ? segmentBackground(day.segments)
                           : getColor(day.distance, max, filter);
                     const titleText =
                       day.activities.length === 0
                         ? day.date
-                        : isGym
-                          ? `${day.date}: ${day.distance} session(s)`
-                          : day.domType === 'Training' &&
-                              !isActivityExcludedFromTotals(filter)
-                            ? `${day.date}: ${Math.round(day.timeSecs / 60)}min`
-                            : `${day.date}: ${(day.activities.reduce((s, a) => s + a.distance, 0) / 1000).toFixed(1)} km`;
+                        : isAll
+                          ? day.date +
+                            ': ' +
+                            sportDistances(day.activities)
+                              .map(
+                                ({ type, distance }) =>
+                                  typeLabel(type, locale) +
+                                  ' ' +
+                                  (distance / 1000).toFixed(1) +
+                                  ' km'
+                              )
+                              .join(' · ')
+                          : isGym
+                            ? `${day.date}: ${day.distance} session(s)`
+                            : day.domType === 'Training' &&
+                                !isActivityExcludedFromTotals(filter)
+                              ? `${day.date}: ${Math.round(day.timeSecs / 60)}min`
+                              : `${day.date}: ${(day.activities.reduce((s, a) => s + a.distance, 0) / 1000).toFixed(1)} km`;
                     return (
                       <button
                         type="button"
@@ -613,7 +620,7 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
                         aria-label={titleText}
                         key={day.date}
                         className="heatmap-day h-3 w-3 shrink-0 rounded-sm transition-colors hover:ring-1 hover:ring-[var(--color-muted)]"
-                        style={{ backgroundColor: bgColor }}
+                        style={{ background: bgColor }}
                         title={titleText}
                         onClick={() => {
                           setDayActivities(day.activities);
@@ -722,10 +729,32 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
         )}
       </div>
 
+      <div
+        className="mt-4 flex flex-wrap justify-end gap-x-5 gap-y-2 border-t border-[var(--color-border)] pt-4 text-xs"
+        aria-label={locale === 'zh' ? '各运动总里程' : 'Distance by sport'}
+      >
+        {sportDistances(
+          activities.filter(
+            (a) =>
+              !isActivityExcludedFromTotals(a.type) &&
+              (selectedYear === 'all' ||
+                Number(a.start_date_local.slice(0, 4)) === selectedYear)
+          )
+        ).map(({ type, distance }) => (
+          <span key={type} className="flex items-center gap-1.5">
+            <span
+              className="h-2 w-2 rounded-full"
+              style={{ backgroundColor: TYPE_PALETTES[type][2] }}
+            />
+            {typeLabel(type, locale)}{' '}
+            <span className="font-mono">{formatDistance(distance)} km</span>
+          </span>
+        ))}
+      </div>
       {/* Stats row */}
       {selectedYear === 'all'
         ? allStats && (
-            <div className="mt-4 flex items-center justify-end gap-4 border-t border-[var(--color-border)] pt-4 text-sm text-[var(--color-muted)]">
+            <div className="mt-4 flex flex-wrap items-center justify-end gap-4 border-t border-[var(--color-border)] pt-4 text-sm text-[var(--color-muted)]">
               <span className="mr-auto text-xs text-[var(--color-muted)]">
                 {locale === 'zh' ? '全部年份汇总' : 'All-time total'}
               </span>
@@ -782,7 +811,7 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
             </div>
           )
         : yearData[0] && (
-            <div className="mt-4 flex items-center justify-end gap-4 border-t border-[var(--color-border)] pt-4 text-sm text-[var(--color-muted)]">
+            <div className="mt-4 flex flex-wrap items-center justify-end gap-4 border-t border-[var(--color-border)] pt-4 text-sm text-[var(--color-muted)]">
               <span className="flex items-center gap-1 font-mono">
                 <svg
                   className="h-3.5 w-3.5"

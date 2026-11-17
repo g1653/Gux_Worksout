@@ -1024,3 +1024,81 @@ test('activity labels follow the selected language in both directions', () => {
     assert.equal(activityTypeLabel(type, 'zh'), zh);
   }
 });
+
+import { summarySportChart } from '../src/components/Dashboard/utils/summary';
+import {
+  sportDistances,
+  segmentBackground,
+} from '../src/components/Dashboard/utils/sportColors';
+
+test('mixed sport summaries retain independent distances and empty calendar days', () => {
+  const items = [
+    activity({
+      type: 'Trail Run',
+      distance: 5000,
+      start_date_local: '2026-11-01 08:00:00',
+    }),
+    activity({
+      type: 'VirtualRide',
+      distance: 40000,
+      start_date_local: '2026-11-01 09:00:00',
+    }),
+    activity({
+      type: 'Run',
+      distance: 3000,
+      start_date_local: '2026-11-02 08:00:00',
+    }),
+  ];
+  assert.deepEqual(sportDistances(items), [
+    { type: 'Run', distance: 8000 },
+    { type: 'Ride', distance: 40000 },
+  ]);
+  const chart = summarySportChart(items, 'month', '2026-11');
+  assert.equal(chart.length, 30);
+  assert.deepEqual(chart[0], { label: '01', Run: 5, Ride: 40 });
+  assert.deepEqual(chart[1], { label: '02', Run: 3, Ride: 0 });
+  assert.deepEqual(chart[2], { label: '03', Run: 0, Ride: 0 });
+});
+
+test('mixed heatmap days use independent sport intensity and preserve zero-distance training', () => {
+  const items = [
+    activity({
+      type: 'Run',
+      distance: 5000,
+      start_date_local: '2026-11-01 08:00:00',
+    }),
+    activity({
+      type: 'Ride',
+      distance: 40000,
+      start_date_local: '2026-11-01 09:00:00',
+    }),
+    activity({
+      type: 'Workout',
+      distance: 0,
+      moving_time: '0:30:00',
+      start_date_local: '2026-11-01 10:00:00',
+    }),
+    activity({
+      type: 'Run',
+      distance: 10000,
+      start_date_local: '2026-11-02 08:00:00',
+    }),
+    activity({
+      type: 'Swim',
+      distance: 1000,
+      start_date_local: '2025-11-01 08:00:00',
+    }),
+  ];
+  const day = buildYearGrid(2026, items, false, true)
+    .grid.flat()
+    .find((d) => d.date === '2026-11-01')!;
+  assert.deepEqual(day.segments, [
+    { type: 'Run', ratio: 0.5 },
+    { type: 'Ride', ratio: 1 },
+    { type: 'Training', ratio: 1 },
+  ]);
+  assert.match(segmentBackground(day.segments), /linear-gradient/);
+  assert.match(segmentBackground(day.segments), /#fb923c/);
+  assert.match(segmentBackground(day.segments), /#2563eb/);
+  assert.equal(buildYearGrid(2026, items, false, true).stats.count, 4);
+});

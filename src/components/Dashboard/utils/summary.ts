@@ -1,3 +1,4 @@
+import { sportDistances, sportGroup } from './sportColors';
 import type { Activity } from '../types';
 import { parseMovingTime } from '../hooks/useActivities';
 
@@ -86,4 +87,31 @@ export function summaryChart(
   return [...buckets.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([label, km]) => ({ label, km: Number(km.toFixed(2)) }));
+}
+
+// Keep an independent series per sport, including empty calendar buckets.
+export function summarySportChart(
+  activities: Activity[],
+  period: SummaryPeriod,
+  key: string
+) {
+  const groups = sportDistances(activities);
+  const series = new Map(
+    groups.map(({ type }) => [
+      type,
+      new Map(
+        summaryChart(
+          activities.filter((a) => sportGroup(a.type) === type),
+          period,
+          key
+        ).map((d) => [d.label, d.km])
+      ),
+    ])
+  );
+  return summaryChart(activities, period, key).map(({ label }) => ({
+    label,
+    ...Object.fromEntries(
+      groups.map(({ type }) => [type, series.get(type)?.get(label) ?? 0])
+    ),
+  })) as ({ label: string } & Record<string, string | number>)[];
 }
