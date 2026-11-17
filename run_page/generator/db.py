@@ -128,6 +128,9 @@ class Activity(Base):
 
     def to_dict(self):
         out = {}
+        if self.type == "RoadTrip" and self.start_date_local and self.elapsed_time:
+            start = datetime.datetime.fromisoformat(str(self.start_date_local))
+            out["end_date_local"] = str(start + self.elapsed_time)
         for key in ACTIVITY_KEYS:
             attr = getattr(self, key)
             if isinstance(attr, (datetime.timedelta, datetime.datetime)):

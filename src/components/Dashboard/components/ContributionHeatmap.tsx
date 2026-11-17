@@ -1,3 +1,4 @@
+import { roadTripDates } from '../utils/roadTripDates';
 import {
   sportGroup as toDisplayType,
   sportPalettes as TYPE_PALETTES,
@@ -59,7 +60,8 @@ export function buildYearGrid(
   yr: number,
   acts: Activity[],
   isGym: boolean,
-  isAll: boolean
+  isAll: boolean,
+  trips: Activity[] = acts.filter((a) => roadTripDates(a).length > 0)
 ) {
   const yearActivities = acts.filter(
     (a) => new Date(a.start_date_local).getFullYear() === yr
@@ -82,6 +84,7 @@ export function buildYearGrid(
   const dayTimeMap = new Map<string, number>(); // date → total seconds (for Training)
   const dayActivitiesMap = new Map<string, Activity[]>();
   for (const a of yearActivities) {
+    if (roadTripDates(a).length) continue;
     const day = a.start_date_local.slice(0, 10);
     dayMap.set(
       day,
@@ -145,6 +148,10 @@ export function buildYearGrid(
       (new Date(yr, 11, 31).getTime() - startDate.getTime()) / 86400000
     ) + 1;
 
+  const tripDays = trips.map((activity) => ({
+    activity,
+    dates: new Set(roadTripDates(activity)),
+  }));
   for (let d = 0; d < totalDays; d++) {
     const date = new Date(yr, 0, 1 + d);
     const weekIdx = Math.floor((d + startDay) / 7);
@@ -158,17 +165,23 @@ export function buildYearGrid(
         ? dayTimeMap.get(key) || 0
         : dayActs.reduce((s, a) => s + (a.distance > 0 ? a.distance : 0), 0);
     const typeRatio = typeValue / (typeMaxMap[domType] ?? 1);
+    const dayTrips = tripDays
+      .filter((t) => t.dates.has(key))
+      .map((t) => t.activity);
     grid[weekIdx].push({
       date: key,
-      distance: dist,
+      distance: dayTrips.length ? Math.max(1, dist) : dist,
       timeSecs: dayTimeMap.get(key) || 0,
-      activities: dayActs,
+      activities: [...dayActs, ...dayTrips],
       domType,
       typeRatio,
-      segments: dayTypeValues(dayActs).map(({ type, value }) => ({
-        type,
-        ratio: value / (typeMaxMap[type] ?? 1),
-      })),
+      segments: [
+        ...dayTypeValues(dayActs).map(({ type, value }) => ({
+          type,
+          ratio: value / (typeMaxMap[type] ?? 1),
+        })),
+        ...(dayTrips.length ? [{ type: 'RoadTrip', ratio: 0.75 }] : []),
+      ],
     });
     if (date.getMonth() !== currentMonth) {
       currentMonth = date.getMonth();
@@ -205,7 +218,25 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
       ),
     [inputActivities, filter]
   );
-  const allYears = useMemo(() => getAvailableYears(activities), [activities]);
+  const trips = useMemo(
+    () =>
+      filter === 'all' || filter === 'RoadTrip'
+        ? inputActivities.filter((a) => roadTripDates(a).length > 0)
+        : [],
+    [inputActivities, filter]
+  );
+  const allYears = useMemo(
+    () =>
+      [
+        ...new Set([
+          ...getAvailableYears(activities),
+          ...trips.flatMap((a) =>
+            roadTripDates(a).map((d) => Number(d.slice(0, 4)))
+          ),
+        ]),
+      ].sort((a, b) => b - a),
+    [activities, trips]
+  );
   const [selectedYear, setSelectedYear] = useState<number | 'all'>(defaultYear);
   const [previousDefaultYear, setPreviousDefaultYear] = useState(defaultYear);
   // yearWindowEnd: index into allYears of the last visible year (0-based, most-recent-first)
@@ -238,16 +269,16 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
     if (selectedYear === 'all') {
       return allYears.map((yr) => ({
         year: yr,
-        ...buildYearGrid(yr, activities, isGym, isAll),
+        ...buildYearGrid(yr, activities, isGym, isAll, trips),
       }));
     }
     return [
       {
         year: selectedYear,
-        ...buildYearGrid(selectedYear, activities, isGym, isAll),
+        ...buildYearGrid(selectedYear, activities, isGym, isAll, trips),
       },
     ];
-  }, [activities, selectedYear, allYears, isGym, isAll]);
+  }, [activities, selectedYear, allYears, isGym, isAll, trips]);
 
   const dayLabels =
     locale === 'zh'
@@ -586,19 +617,26 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
                       <div key={`pad-${i}`} className="h-3 w-3 shrink-0" />
                     ))}
                   {week.map((day) => {
+                    const dayTrips = day.activities.filter(
+                      (a) => roadTripDates(a).length > 0
+                    );
                     const bgColor =
                       day.distance === 0
                         ? 'var(--color-border)'
-                        : isAll
+                        : isAll || dayTrips.length > 0
                           ? segmentBackground(day.segments)
                           : getColor(day.distance, max, filter);
-                    const titleText =
+                    const baseTitle =
                       day.activities.length === 0
                         ? day.date
                         : isAll
                           ? day.date +
                             ': ' +
-                            sportDistances(day.activities)
+                            sportDistances(
+                              day.activities.filter(
+                                (a) => a.type !== 'RoadTrip'
+                              )
+                            )
                               .map(
                                 ({ type, distance }) =>
                                   typeLabel(type, locale) +
@@ -613,6 +651,17 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
                                 !isActivityExcludedFromTotals(filter)
                               ? `${day.date}: ${Math.round(day.timeSecs / 60)}min`
                               : `${day.date}: ${(day.activities.reduce((s, a) => s + a.distance, 0) / 1000).toFixed(1)} km`;
+                    const titleText = dayTrips.length
+                      ? [
+                          day.activities.length > dayTrips.length
+                            ? baseTitle
+                            : day.date,
+                          ...dayTrips.map(
+                            (a) =>
+                              `${typeLabel('RoadTrip', locale)}: ${a.name} (${a.start_date_local.slice(0, 10)} — ${a.end_date_local!.slice(0, 10)})`
+                          ),
+                        ].join(' · ')
+                      : baseTitle;
                     return (
                       <button
                         type="button"
@@ -670,6 +719,8 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
               onClick={() => onSelectActivity?.(activity)}
             >
               {activity.start_date_local.slice(11, 16)} · {activity.name} ·{' '}
+              {roadTripDates(activity).length > 0 &&
+                (locale === 'zh' ? '整段行程 ' : 'Whole trip ')}
               {(activity.distance / 1000).toFixed(1)} km
             </button>
           ))}
@@ -751,6 +802,28 @@ export const ContributionHeatmap = memo(function ContributionHeatmap({
           </span>
         ))}
       </div>
+      {trips.length > 0 && (
+        <p className="mt-3 text-right text-xs text-[var(--color-muted)]">
+          <span style={{ color: '#f59e0b' }}>
+            ● {typeLabel('RoadTrip', locale)}
+          </span>
+          {' · '}
+          {
+            new Set(
+              trips
+                .flatMap((a) => roadTripDates(a))
+                .filter(
+                  (d) =>
+                    selectedYear === 'all' ||
+                    Number(d.slice(0, 4)) === selectedYear
+                )
+            ).size
+          }
+          {locale === 'zh'
+            ? ' 个行程日（不计入运动里程）'
+            : ' trip days (excluded from exercise distance)'}
+        </p>
+      )}
       {/* Stats row */}
       {selectedYear === 'all'
         ? allStats && (

@@ -32,11 +32,14 @@ export function sportDistances(activities: Activity[]) {
       : [];
   });
 }
+const tripPalette = ['#fef3c7', '#fcd34d', '#f59e0b', '#d97706'];
 export function segmentBackground(segments: { type: string; ratio: number }[]) {
   if (!segments.length) return 'var(--color-border)';
   const colors = segments.map(
     ({ type, ratio }) =>
-      sportPalettes[type][Math.max(0, Math.ceil(Math.min(ratio, 1) * 4) - 1)]
+      (type === 'RoadTrip' ? tripPalette : sportPalettes[type])[
+        Math.max(0, Math.ceil(Math.min(ratio, 1) * 4) - 1)
+      ]
   );
   if (colors.length === 1) return colors[0];
   return (

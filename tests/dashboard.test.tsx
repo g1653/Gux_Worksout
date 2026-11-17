@@ -1102,3 +1102,52 @@ test('mixed heatmap days use independent sport intensity and preserve zero-dista
   assert.match(segmentBackground(day.segments), /#2563eb/);
   assert.equal(buildYearGrid(2026, items, false, true).stats.count, 4);
 });
+
+import { roadTripDates } from '../src/components/Dashboard/utils/roadTripDates';
+test('road trips cover inclusive local dates without repeating trip totals', () => {
+  const trip = activity({
+    type: 'RoadTrip',
+    distance: 3000000,
+    start_date_local: '2025-07-15 10:19:42',
+    end_date_local: '2025-07-25 17:59:21',
+  });
+  assert.equal(roadTripDates(trip).length, 11);
+  const result = buildYearGrid(2025, [trip], false, false);
+  assert.equal(
+    result.grid.flat().filter((d) => d.activities.length).length,
+    11
+  );
+  assert.equal(result.stats.distance, 3000000);
+  assert.equal(result.stats.count, 1);
+  const run = activity({
+    distance: 5000,
+    start_date_local: '2025-07-16 08:00:00',
+  });
+  const all = buildYearGrid(2025, [run], false, true, [trip]);
+  assert.equal(all.stats.distance, 5000);
+  const mixed = all.grid.flat().find((d) => d.date === '2025-07-16')!;
+  assert.deepEqual(
+    mixed.segments.map((s) => s.type),
+    ['Run', 'RoadTrip']
+  );
+  assert.equal(mixed.activities.length, 2);
+  assert.match(segmentBackground(mixed.segments), /linear-gradient/);
+});
+test('road trip coverage spans years and rejects missing or reversed end dates', () => {
+  const trip = activity({
+    type: 'RoadTrip',
+    start_date_local: '2025-12-30 12:00:00',
+    end_date_local: '2026-01-02 08:00:00',
+  });
+  assert.equal(
+    buildYearGrid(2026, [], false, true, [trip])
+      .grid.flat()
+      .filter((d) => d.activities.length).length,
+    2
+  );
+  assert.deepEqual(roadTripDates({ ...trip, end_date_local: undefined }), []);
+  assert.deepEqual(
+    roadTripDates({ ...trip, end_date_local: '2025-12-01' }),
+    []
+  );
+});
