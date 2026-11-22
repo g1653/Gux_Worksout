@@ -6393,6 +6393,11 @@
 "source": "strava",
 "metrics_source": "garmin",
 "garmin_id": 664553247,
+"temperature_min": 5.9,
+"temperature_max": 6.2,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "best_efforts": [
 {
 "name": "400m",
@@ -6436,6 +6441,11 @@
 "source": "strava",
 "metrics_source": "garmin",
 "garmin_id": 664580519,
+"temperature_min": 4.8,
+"temperature_max": 4.8,
+"temperature_source": "open-meteo",
+"weather_code": 0,
+"weather_source": "open-meteo",
 "streak": 1
 }
 ]
